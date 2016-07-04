@@ -86,21 +86,41 @@ Console.Write('|');
 
 # 데이터 타입
 - 다음과 같은 숫자 타입들이 있습니다.
+
 ![C# 데이터 타입](datatypes.png)
 
 ---
 # 연산자
 - 이건 그냥 넘어갑시다
+
 ![C# 연산자](operators.png)
 
 ---
 # if, else, else if, switch, while, do, for, break, continue
 - C-like 언어 (C, C++, Java등) 와 (거의)완전히 같습니다.
-- 따라서 생략...
+- 따라서 매우 빠르게 진행
 - 모르는게 있으면 용재 형 or 책 참고 바람
 
 ---
+# if, else, else if
+```csharp
+if (score == 100)
+{
+    Console.WriteLine("Asian-level perfect!");
+}
+else if (score >= 90 && score < 100)
+{
+    Console.WriteLine("Definitely an A grade!");
+}
+else
+{
+    Console.WriteLine("Could have done better...");
+}
+```
+
+---
 # 팁: "? :" 연산자
+
 ```csharp
 int value;
 if (someBoolean) value = 6;
@@ -110,8 +130,27 @@ else value = 4;
 ```csharp
 int value = someBoolean? 6 : 4;
 ```
+
 ---
-# 팁: while 사용
+# switch
+
+```csharp
+int a = 1;
+int b = 2;
+char operator = '-';
+switch(operator)
+{
+    // break statement is mandatory!
+    case '+': Console.WriteLine(a + b); break;
+    case '-': Console.WriteLine(a - b); break;
+    case '*': Console.WriteLine(a * b); break;
+    case '/': Console.WriteLine(a / b); break;
+    default: Console.WriteLine("Can't understand"); break;
+}
+```
+---
+# while, do, break
+
 ```csharp
 int playersNumber;
 while(true) {
@@ -142,6 +181,7 @@ do
 }
 while(playersNumber < 0 || playersNumber > 10)
 ```
+
 ---
 # enum
 - "Named values" - 이름을 가지고 있는 값들
@@ -176,28 +216,42 @@ int a = 1;
 Console.WriteLine(a); // output : 3
 Console.WriteLine(b); // compile error
 ```
----
-# functions
-
+- 참고로 이 성질을 안 가지고 있는 언어들도 있음! (ex. Javascript, Python)
 
 ---
-# 과제 1. 피라미드
+# 함수
+- C#에서 함수를 선언하는 방법
 
-- 이런 거 많이 해보셨죠?
+```csharp
+using System;
 
+namespace ConsoleApplication
+{
+    class Program
+    {
+        // how to use functions
+        public static void Main(string[] args)
+        {
+            WriteAtPosition('*', 0, 0);
+            int num = GetNumber();
+        }
+        // how to create functions
+        public static void WriteAtPosition(char c, int x, int y)
+        {
+            Console.SetCursorPosition(x, y);
+            Console.Write(c);
+        }
+        public static int GetNumber()
+        {
+            string input = Console.ReadLine();
+            return Convert.ToInt32(input);
+        }
+    }
+}
 ```
-   *
-  ***
- *****
-*******
-```
-
-- 루프를 사용해서 구현해보기! (no cheating)
-- 함수 ``void drawPyramid(int n)``을 만들기
 
 ---
-
-# 과제 2.
+# 과제 1. FizzBuzz (수업시간에)
 - 인터뷰 문제로 생각보다 많이 나오고..
 - 생각보다 많이 못 푸는(?) 문제
 
@@ -207,10 +261,45 @@ Console.WriteLine(b); // compile error
     - 3과 5로 나누어떨어지면 “FizzBuzz”를 대신 출력하면 된다.
 
 ---
+# Value vs. Reference
+- 오늘 수업의 핵심
+- C, C++, Java하고 확실히 다른 부분
+
+---
+# Stack and Heap
+- 프로그램의 메모리는 하나의 스택 안에 저장되어 있음
+- 스택: 말 그대로 쌓아올리는 더미를 생각하면 쉽습니다...
+
+
+---
+# 어레이
+- 예상 밖일지도 모르지만.... Reference 타입임!
+- new를 불러서 선언
+```csharp
+int[] array = new int[3];
+```
+- 여기서 ``int[]``는 하나의 "타입"임. 이 타입에 어레이의 크기를 갖다 붙칠 순 없음.
+
+---
+# 과제 2. 하노이의 탑 그리기
+
+- 이런 거 많이 해보셨죠?
+```
+    |          |          |
+   *|*         |          |
+  **|**        |          |
+ ***|***       |          |
+****|****      |          |
+```
+
+- 함수 ``void PrintTowers(int n, int[] towerA, int[] towerB, int[] towerC)``을 만들기
+    - n : 원판의 최대 개수
+    - towerA, towerB, towerC : 각 타워마다 들어있는 원판들
+
+---
 
 # 그럼 끝.
 ## 모두 수고하셨습니다!
-
 
     </textarea>
     <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
@@ -218,5 +307,6 @@ Console.WriteLine(b); // compile error
     <script>
       var slideshow = remark.create();
     </script>
+    <script src="https://cdn.rawgit.com/William-Yeh/remark-zoom/master/remark-zoom.js" type="text/javascript"></script>
   </body>
 </html>

@@ -1,20 +1,73 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Title</title>
-    <meta charset="utf-8">
-    <style>
+    <title>Your Title Here</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!-- This is template for http://remarkjs.com/ by Ole Petter Bang -->
+    <!-- CSS modifcations by J. M. Lilly-->
+
+    <style type="text/css">
       @import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
       @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
       @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
 
-      body { font-family: 'Nanum Gothic'; }
+      body { font-family: 'NanumGothic';letter-spacing:0.025em;}
       h1, h2, h3 {
-        font-family: 'Nanum Gothic';
+        font-family: 'NanumGothic';
         font-weight: normal;
-        font-size: 200%;
       }
+      .remark-slide-content h1 { font-size: 2.4em; color:#606060;font-weight: bold;letter-spacing:0.05em;margin-top:0em}
+      .remark-slide-content h2 { font-size: 1.55em;color:#606060;font-weight: bold;letter-spacing:0.05em;margin-top:0em}
+      .remark-slide-content h3 { font-size: 1.4em;color:#606060;font-weight: bold;letter-spacing:0.05em;margin-top:0em}
+      .remark-slide-content p { font-size: 1.4em; }
+      .remark-slide-content ol {font-size: 1.2em;}
+      .remark-slide-content ul {font-size: 1.2em;}
+      .remark-slide-content
       .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-fading { z-index: 9; }
+
+      /* Thanks to http://www.partage-it.com/animez-vos-presentations-remark-js/  (in French) */
+      /*
+      .remark-slide-container {transition: opacity 0.5s ease-out;opacity: 0;}
+      .remark-visible {transition: opacity 0.5s ease-out;opacity: 1;}
+      */
+
+      /* Two-column layout */
+      .left-column {
+        width: 50%;
+        float: left;
+      }
+      .right-column {
+        width: 49%;
+        float: right;
+        padding-top: 0em;
+        margin-top: 0em;
+        text-align: left;
+      }
+      .footnote {
+        position:absolute;
+        bottom: 1em;
+        left: 14em;
+        font-size: 0.7em;
+       }
+
+      /* Some special classes */
+      .title {font-size: 3.3em; color:#606060;font-weight:bold;letter-spacing:0.05em}
+      .subtitle {font-size: 1.4em}
+      .author {font-size: 1.4em; color:#606060;font-weight:bold;letter-spacing:0.02em}
+      .coauthor {font-size: 1.0em; color:#606060;font-weight:bold;letter-spacing:0.02em}
+      .institution {font-size: 1.0em;}
+      .date {font-size: 1.0em;font-style: italic}
+
+      .cite {font-size: 0.8em; color:#33AA99;font-style: italic}
+      .strike {color:salmon;text-decoration:line-through}
+
+      /*Set color scheme for links.*/
+      a {text-decoration: none; color: #666666;text-align:center; width: 24%}
+      /*Setting link properties is particular, do not change order below*/
+      a:visited {color:#666666}
+      a:hover {color:#33AA99}
+      a:active, a#active {color:#FF9700;}
     </style>
   </head>
   <body>
@@ -25,13 +78,16 @@ class: center, middle
 # 강의 1 : 절차지향 프로그래밍의 모든 것
 
 ---
+
 # 개발환경
 
-- Visual Studio/Xamarin Studio
-- 만약 IDE를 깔고 싶지 않다면 .Net Core를 설치한다음 Visual Studio Code, Atom과 같은 편집기로 작업해도 됨.
-    - 터미널 익숙한 사람에게 추천
+Visual Studio/Xamarin Studio
+
+만약 IDE를 깔고 싶지 않다면 .Net Core를 설치한다음 Visual Studio Code, Atom과 같은 편집기로 작업해도 됨.
+- 터미널 익숙한 사람에게 추천
 
 ---
+
 # 첫 번째 프로그램
 
 ```csharp
@@ -52,8 +108,9 @@ namespace ConsoleApplication
 
 # 음, using? namespace? class? static?
 
-- 이것에 대한 설명은 다음으로 미뤄두죠
-- 그냥 알아야 할 것은 안의 Main 함수가 무조건 처음에 호출되고, 이 곳 안에서 작업을 하면 된다는 것입니다
+이것에 대한 설명은 다음으로 미뤄두죠
+
+그냥 알아야 할 것은 안의 Main 함수가 무조건 처음에 호출되고, 이 곳 안에서 작업을 하면 된다는 것입니다
 
 ---
 # 콘솔 프로그램에서 쓰게 되는 함수들
@@ -76,23 +133,25 @@ Console.Write('|');
 
 # 데이터 타입
 
-- 다음과 같은 숫자 타입들이 있습니다.
+다음과 같은 숫자 타입들이 있습니다.
 
 ![C# 데이터 타입](datatypes.png)
 
 ---
 # 연산자
 
-- 이건 그냥 넘어갑시다
+이건 그냥 넘어갑시다
 
 ![C# 연산자](operators.png)
 
 ---
 # if, else, else if, switch, while, do, for, break, continue
 
-- C-like 언어 (C, C++, Java등) 와 (거의)완전히 같습니다.
-- 따라서 매우 빠르게 진행
-- 모르는게 있으면 용재 형 or 책 참고 바람
+C-like 언어 (C, C++, Java등) 와 (거의)완전히 같습니다.
+
+따라서 매우 빠르게 진행
+
+모르는게 있으면 용재 형 or 책 참고 바람
 
 ---
 # if, else, else if
@@ -190,12 +249,14 @@ while(playersNumber < 0 || playersNumber > 10)
 ```
 
 ---
+
 # enum
 
-- "Named values" - 이름을 가지고 있는 값들
-- 이게 나오기 이전에 썼던 방법: 매직 넘버들
+"Named values" - 이름을 가지고 있는 값들
 
-- 사용 전:
+이게 나오기 이전에 썼던 방법: 매직 넘버들
+
+사용 전:
 
 ```csharp
 const int SUNDAY = 1;
@@ -216,7 +277,7 @@ switch(day)
 ---
 # enum
 
-- 사용 후:
+사용 후:
 
 ```csharp
 enum DaysOfWeek
@@ -239,8 +300,10 @@ switch(day)
 ---
 # {}
 
-- C, C++, C#, Java 등의 언어에서 가장 중요한 기호를 뽑는다면 이게 될 것
-- block scope : {} 안에 선언되어 있는 모든 변수들은 {} 안에서만 유효하다
+C, C++, C#, Java 등의 언어에서 가장 중요한 기호를 뽑는다면 이게 될 것
+
+block scope : {} 안에 선언되어 있는 모든 변수들은 {} 안에서만 유효하다
+
 ```csharp
 int a = 1;
 {
@@ -250,14 +313,17 @@ int a = 1;
 Console.WriteLine(a); // output : 3
 Console.WriteLine(b); // compile error
 ```
-- 참고로 이 성질을 안 가지고 있는 언어들도 있음! (ex. Javascript, Python)
+
+참고로 이 성질을 안 가지고 있는 언어들도 있음! (ex. Javascript, Python)
 
 ---
 # 함수
 
-- C#에서 함수를 선언하는 방법
-- 약속: 함수 이름은 모두 PascalCase로 통일합시다
-- static이 붙는 이유는 나중에 설명할께요...
+C#에서 함수를 선언하는 방법
+
+약속: 함수 이름은 모두 PascalCase로 통일합시다
+
+static이 붙는 이유는 나중에 설명할께요...
 
 ```csharp
 using System;
@@ -290,8 +356,9 @@ namespace ConsoleApplication
 ---
 # Recursion
 
-- 알고리즘을 매우 쉽게 구상하기 위한 방법
-- 나중에 하노이 탑 과제를 할 때 사용하게 될거에요
+알고리즘을 매우 쉽게 구상하기 위한 방법
+
+나중에 하노이 탑 과제를 할 때 사용하게 될거에요
 
 ```csharp
 static void Factorial(int n)
@@ -304,27 +371,33 @@ static void Factorial(int n)
     return number * Factorial(number - 1);
 }
 ```
+
 ---
 # 과제 1: FizzBuzz (수업시간에)
 
-- 인터뷰 문제로 생각보다 많이 나오고..
-- 생각보다 많이 못 푸는(?) 문제
+인터뷰 문제로 생각보다 많이 나오고..
 
-- 1부터 100까지의 숫자를 하나하나 새로운 줄에 출력하되,
-    - 3으로 나누어떨어지면 “Fizz”를,
-    - 5로 나누어떨어지면 “Buzz”를,
-    - 3과 5로 나누어떨어지면 “FizzBuzz”를 대신 출력하면 된다.
+생각보다 많이 못 푸는(?) 문제
+
+1부터 100까지의 숫자를 하나하나 새로운 줄에 출력하되,
+
+- 3으로 나누어떨어지면 “Fizz”를,
+- 5로 나누어떨어지면 “Buzz”를,
+- 3과 5로 나누어떨어지면 “FizzBuzz”를 대신 출력하면 된다.
 
 ---
 # 어레이
 
-- new를 불러서 선언
-- 여기서 `int[]`는 하나의 "타입"임. 이 타입에 어레이의 크기를 갖다 붙칠 수는 없음
+new를 불러서 선언
+
+여기서 `int[]`는 하나의 "타입"임. 이 타입에 어레이의 크기를 갖다 붙칠 수는 없음
+
 ```csharp
 int[] array = new int[3];
 array[0] = 1; array[1] = 2; array[2] = 3;
 ```
-- 선언과 동시에 값들을 집어넣을 수 있음
+
+선언과 동시에 값들을 집어넣을 수 있음
 ```csharp
 int[] array = new int[3] {1, 2, 3};
 // 크기를 생략할 수 있음
@@ -335,14 +408,17 @@ int[] array = {1, 2, 3};
 
 ---
 # 어레이를 탐색하는 방법
-- 고전적인 방법
+
+고전적인 방법
+
 ```csharp
 for(int i = 0; i < arr.Length; i++)
 {
     Console.WriteLine(arr[i]);
 }
 ```
-- C#스러운 방법
+C#스러운 방법
+
 ```csharp
 foreach(int n in arr)
 {
@@ -352,7 +428,9 @@ foreach(int n in arr)
 ---
 
 # 다차원 어레이
-- Multidimensional Array
+
+Multidimensional Array
+
 ```csharp
 int[,] matrix = new int[3,2] { {1, 2}, {3, 4}, {5, 6} };
 // or
@@ -363,7 +441,9 @@ int[,] matrix = { {1, 2}, {3, 4}, {5, 6} };
 3 4
 5 6
 ```
-- Jagged Array (Array of arrays)
+
+Jagged Array (Array of arrays)
+
 ```csharp
 int[][] jagged = new int[2][] { new int[] {2, 3, 4}, new int[] {5, 6, 7, 8, 9} };
 ```
@@ -375,23 +455,29 @@ int[][] jagged = new int[2][] { new int[] {2, 3, 4}, new int[] {5, 6, 7, 8, 9} }
 ---
 # string
 
-- 문자열의 조합
+문자열의 조합
+
 ```csharp
 string line = "Hello World!";
 ```
-- 하지만 C에서처럼 순수한 char 어레이는 절대 아닙니다
+
+하지만 C에서처럼 순수한 char 어레이는 절대 아닙니다
+
 ---
 # string
 
-- Immutable (값을 수정할 수 없음!)
-- 즉 string을 편집하는 것 처럼 보여도 실제로는 새로운 string 오브젝트가 생성됨
+Immutable (값을 수정할 수 없음!)
+
+즉 string을 편집하는 것 처럼 보여도 실제로는 새로운 string 오브젝트가 생성됨
+
 ```csharp
 string s1 = "A string is more ";
 string s2 = "than the sum of its chars.";
 s1 += s2;
 Console.WriteLine(s1);
 ```
-- 다양한 편의기능을 제공
+
+다양한 편의기능을 제공
 ```csharp
 string s1 = "Hello World!";
 string s2 = s1.Replace("o", ""); // Hell World!
@@ -409,8 +495,9 @@ char c = s1[2]; // l
 ---
 # Stack
 
-- 프로그램의 메모리는 하나의 스택 안에 저장되어 있음
-- 스택: 말 그대로 쌓아올리는 더미를 생각하면 쉽습니다...
+프로그램의 메모리는 하나의 스택 안에 저장되어 있음
+
+스택: 말 그대로 쌓아올리는 더미를 생각하면 쉽습니다...
 
 ---
 
@@ -440,10 +527,13 @@ static int f2(int x, int y)
 
 # Heap
 
-- 하지만 스택은 여러가지 제약점이 있습니다..
-- 특히 하나의 frame 안에 있는 동안 다른 frame에 있는 메모리 접근 불가
-- 그래서 쓰는 것이 Heap (데이터 저장 창고)
-- 어디에서나 데이터를 뺐다 쓸 수 있음 (그 데이터에 대한 reference만 있으면)
+하지만 스택은 여러가지 제약점이 있습니다..
+
+특히 하나의 frame 안에 있는 동안 다른 frame에 있는 메모리 접근 불가
+
+그래서 쓰는 것이 Heap (데이터 저장 창고)
+
+어디에서나 데이터를 뺐다 쓸 수 있음 (그 데이터에 대한 reference만 있으면)
 
 ---
 # Stack & Heap
@@ -454,22 +544,26 @@ static int f2(int x, int y)
 ---
 # Stack & Heap
 
-- 어떤 것은 Stack에 올라오고 어떤 것은 Heap에 올라오는가?
-    - Value 타입의 변수가 가지고 있는 데이터 -> Stack
-    - Reference 타입의 변수가 가지고 있는 데이터 -> Heap
+어떤 것은 Stack에 올라오고 어떤 것은 Heap에 올라오는가?
+
+- Value 타입의 변수가 가지고 있는 데이터 -> Stack
+- Reference 타입의 변수가 가지고 있는 데이터 -> Heap
 
 ---
 
 # 대표적인 Value 타입
 
-- 모든 데이터 타입 (int, char, float, double, bool, ...)
-- 이외 우리가 나중에 만들게 될 모든 struct들
+모든 데이터 타입 (int, char, float, double, bool, ...)
+
+이외 우리가 나중에 만들게 될 모든 struct들
 
 # 대표적인 Reference 타입
 
-- 어레이
-- string (하지만 좀 특별한 성질들을 가지고 있습니다)
-- 이외 우리가 나중에 만들게 될 모든 class들
+어레이
+
+string (하지만 좀 특별한 성질들을 가지고 있습니다)
+
+이외 우리가 나중에 만들게 될 모든 class들
 
 ---
 # Example
@@ -499,10 +593,13 @@ static int ChangeNumber(int a)
 
 # Garbage Collection
 
-- C나 C++에서는 이 데이터 저장 창고에다가 데이터를 집어넣으면 프로그래머가 하나하나 다 메모리를 관리해야 했지만...
-    - remember malloc / free?
-- C#에서는 미개한 C와는 달리 신경쓸 필요가 없습니다!
-- C# 런타임에서 알아서 프로그램이 안 쓰는 메모리를 청소해좀
+C나 C++에서는 이 데이터 저장 창고에다가 데이터를 집어넣으면 프로그래머가 하나하나 다 메모리를 관리해야 했지만...
+
+- remember malloc / free?
+
+C#에서는 미개한 C와는 달리 신경쓸 필요가 없습니다!
+
+C# 런타임에서 알아서 프로그램이 안 쓰는 메모리를 청소해좀
 
 ---
 # Example
@@ -522,7 +619,7 @@ static int Main(string[] args)
 
 # 과제 2: 하노이의 탑 그리기
 
-- 이런 거 많이 해보셨죠?
+이런 거 많이 해보셨죠?
 
 ```
     |          |          |
@@ -536,9 +633,10 @@ towerA = {4, 3, 2, 0}
 towerB = {1, 0, 0, 0}
 towerC = {0 ,0, 0, 0}
 ```
-- 함수 ``void PrintTowers(int n, int[] towerA, int[] towerB, int[] towerC)``을 만들기
-    - n : 원판의 개수
-    - towerA, towerB, towerC : 각 타워마다 들어있는 원판들의 종류
+함수 ``void PrintTowers(int n, int[] towerA, int[] towerB, int[] towerC)``을 만들기
+
+- n : 원판의 개수
+- towerA, towerB, towerC : 각 타워마다 들어있는 원판들의 종류
 
 ---
 

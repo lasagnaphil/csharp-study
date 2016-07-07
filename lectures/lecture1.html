@@ -25,23 +25,11 @@ class: center, middle
 # 강의 1 : 절차지향 프로그래밍의 모든 것
 
 ---
-# 목차
-
-- 개발 환경
-- 변수
-- 연산자
-- if, else, else if, switch
-- while, do, for
-- "{}"
-- 함수
-- 재귀함수 (recursion)
-- enum
-- **Value/Reference**
----
 # 개발환경
-    - Visual Studio/Xamarin Studio
-    - 만약 IDE를 깔고 싶지 않다면 .Net Core를 설치한다음 Visual Studio Code, Atom과 같은 편집기로 작업해도 됨.
-        - 터미널 익숙한 사람에게 추천
+
+- Visual Studio/Xamarin Studio
+- 만약 IDE를 깔고 싶지 않다면 .Net Core를 설치한다음 Visual Studio Code, Atom과 같은 편집기로 작업해도 됨.
+    - 터미널 익숙한 사람에게 추천
 
 ---
 # 첫 번째 프로그램
@@ -53,7 +41,7 @@ namespace ConsoleApplication
 {
     class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
         }
@@ -69,6 +57,7 @@ namespace ConsoleApplication
 
 ---
 # 콘솔 프로그램에서 쓰게 되는 함수들
+
 ```csharp
 // read as string
 string contents = Console.ReadLine();
@@ -86,24 +75,28 @@ Console.Write('|');
 ---
 
 # 데이터 타입
+
 - 다음과 같은 숫자 타입들이 있습니다.
 
 ![C# 데이터 타입](datatypes.png)
 
 ---
 # 연산자
+
 - 이건 그냥 넘어갑시다
 
 ![C# 연산자](operators.png)
 
 ---
 # if, else, else if, switch, while, do, for, break, continue
+
 - C-like 언어 (C, C++, Java등) 와 (거의)완전히 같습니다.
 - 따라서 매우 빠르게 진행
 - 모르는게 있으면 용재 형 or 책 참고 바람
 
 ---
 # if, else, else if
+
 ```csharp
 if (score == 100)
 {
@@ -117,6 +110,19 @@ else
 {
     Console.WriteLine("Could have done better...");
 }
+```
+
+---
+# 팁: 조건식에 대하여
+
+```csharp
+bool result;
+if (score > 90) result = true;
+else result = false;
+```
+
+```csharp
+bool result = score > 90;
 ```
 
 ---
@@ -185,27 +191,54 @@ while(playersNumber < 0 || playersNumber > 10)
 
 ---
 # enum
+
 - "Named values" - 이름을 가지고 있는 값들
 - 이게 나오기 이전에 썼던 방법: 매직 넘버들
 
+- 사용 전:
+
 ```csharp
-const int PLAYER = 1;
-const int MONSTER = 2;
-const int BLOCK = 3;
+const int SUNDAY = 1;
+const int MONDAY = 2;
+const int TUESDAY = 3;
 ...
-switch(id)
+int day = MONDAY;
+switch(day)
 {
-    case PLAYER:
+    case SUNDAY:
         ..
-    case MONSTER:
+    case MONDAY:
         ..
-    case BLOCK:
+    case TUESDAY:
+        ..
+}
+```
+---
+# enum
+
+- 사용 후:
+
+```csharp
+enum DaysOfWeek
+{
+    Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
+};
+
+DaysOfWeek day = DaysOfWeek.Monday;
+switch(day)
+{
+    case DaysOfWeek.Sunday:
+        ..
+    case DaysOfWeek.Monday:
+        ..
+    case DaysOfWeek.Tuesday:
         ..
 }
 ```
 
 ---
 # {}
+
 - C, C++, C#, Java 등의 언어에서 가장 중요한 기호를 뽑는다면 이게 될 것
 - block scope : {} 안에 선언되어 있는 모든 변수들은 {} 안에서만 유효하다
 ```csharp
@@ -221,7 +254,10 @@ Console.WriteLine(b); // compile error
 
 ---
 # 함수
+
 - C#에서 함수를 선언하는 방법
+- 약속: 함수 이름은 모두 PascalCase로 통일합시다
+- static이 붙는 이유는 나중에 설명할께요...
 
 ```csharp
 using System;
@@ -231,18 +267,18 @@ namespace ConsoleApplication
     class Program
     {
         // how to use functions
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
             WriteAtPosition('*', 0, 0);
             int num = GetNumber();
         }
         // how to create functions
-        public static void WriteAtPosition(char c, int x, int y)
+        static void WriteAtPosition(char c, int x, int y)
         {
             Console.SetCursorPosition(x, y);
             Console.Write(c);
         }
-        public static int GetNumber()
+        static int GetNumber()
         {
             string input = Console.ReadLine();
             return Convert.ToInt32(input);
@@ -252,50 +288,257 @@ namespace ConsoleApplication
 ```
 
 ---
-# 과제 1. FizzBuzz (수업시간에)
+# Recursion
+
+- 알고리즘을 매우 쉽게 구상하기 위한 방법
+- 나중에 하노이 탑 과제를 할 때 사용하게 될거에요
+
+```csharp
+static void Factorial(int n)
+{
+    // edge case
+    if (number == 1)
+        return 1;
+
+    // recursion formula
+    return number * Factorial(number - 1);
+}
+```
+---
+# 과제 1: FizzBuzz (수업시간에)
+
 - 인터뷰 문제로 생각보다 많이 나오고..
 - 생각보다 많이 못 푸는(?) 문제
 
-- 1부터 100까지의 숫자를 하나하나 출력하되,
+- 1부터 100까지의 숫자를 하나하나 새로운 줄에 출력하되,
     - 3으로 나누어떨어지면 “Fizz”를,
     - 5로 나누어떨어지면 “Buzz”를,
     - 3과 5로 나누어떨어지면 “FizzBuzz”를 대신 출력하면 된다.
 
 ---
-# Value vs. Reference
-- 오늘 수업의 핵심
-- C, C++, Java하고 확실히 다른 부분
+# 어레이
+
+- new를 불러서 선언
+- 여기서 `int[]`는 하나의 "타입"임. 이 타입에 어레이의 크기를 갖다 붙칠 수는 없음
+```csharp
+int[] array = new int[3];
+array[0] = 1; array[1] = 2; array[2] = 3;
+```
+- 선언과 동시에 값들을 집어넣을 수 있음
+```csharp
+int[] array = new int[3] {1, 2, 3};
+// 크기를 생략할 수 있음
+int[] array = new int[] {1, 2, 3};
+// 더 줄이면
+int[] array = {1, 2, 3};
+```
 
 ---
-# Stack and Heap
+# 어레이를 탐색하는 방법
+- 고전적인 방법
+```csharp
+for(int i = 0; i < arr.Length; i++)
+{
+    Console.WriteLine(arr[i]);
+}
+```
+- C#스러운 방법
+```csharp
+foreach(int n in arr)
+{
+    Console.WriteLine(n);
+}
+```
+---
+
+# 다차원 어레이
+- Multidimensional Array
+```csharp
+int[,] matrix = new int[3,2] { {1, 2}, {3, 4}, {5, 6} };
+// or
+int[,] matrix = { {1, 2}, {3, 4}, {5, 6} };
+```
+```
+1 2
+3 4
+5 6
+```
+- Jagged Array (Array of arrays)
+```csharp
+int[][] jagged = new int[2][] { new int[] {2, 3, 4}, new int[] {5, 6, 7, 8, 9} };
+```
+```
+2 3 4
+5 6 7 8 9
+```
+
+---
+# string
+
+- 문자열의 조합
+```csharp
+string line = "Hello World!";
+```
+- 하지만 C에서처럼 순수한 char 어레이는 절대 아닙니다
+---
+# string
+
+- Immutable (값을 수정할 수 없음!)
+- 즉 string을 편집하는 것 처럼 보여도 실제로는 새로운 string 오브젝트가 생성됨
+```csharp
+string s1 = "A string is more ";
+string s2 = "than the sum of its chars.";
+s1 += s2;
+Console.WriteLine(s1);
+```
+- 다양한 편의기능을 제공
+```csharp
+string s1 = "Hello World!";
+string s2 = s1.Replace("o", ""); // Hell World!
+string s3 = s1.Substring(6, 5); // World
+char c = s1[2]; // l
+```
+
+---
+# Value vs. Reference
+
+## 오늘 수업의 핵심
+
+## C, C++, Java하고 확실히 다른 부분
+
+---
+# Stack
+
 - 프로그램의 메모리는 하나의 스택 안에 저장되어 있음
 - 스택: 말 그대로 쌓아올리는 더미를 생각하면 쉽습니다...
 
-
 ---
-# 어레이
-- 예상 밖일지도 모르지만.... Reference 타입임!
-- new를 불러서 선언
+
+# 예시
+
 ```csharp
-int[] array = new int[3];
+static int Main(string[] args)
+{
+    int a = 1;
+    int b = 2;
+    f1();
+}
+static void f1()
+{
+    int c = 3;
+    int d = 4;
+    c = 2;
+    int e = f2(c, d);
+}
+static int f2(int x, int y)
+{
+    return x + y;
+}
 ```
-- 여기서 ``int[]``는 하나의 "타입"임. 이 타입에 어레이의 크기를 갖다 붙칠 순 없음.
 
 ---
-# 과제 2. 하노이의 탑 그리기
+
+# Heap
+
+- 하지만 스택은 여러가지 제약점이 있습니다..
+- 특히 하나의 frame 안에 있는 동안 다른 frame에 있는 메모리 접근 불가
+- 그래서 쓰는 것이 Heap (데이터 저장 창고)
+- 어디에서나 데이터를 뺐다 쓸 수 있음 (그 데이터에 대한 reference만 있으면)
+
+---
+# Stack & Heap
+
+!["Stack"](stack.png)
+!["heap"](heap.png)
+
+---
+# Stack & Heap
+
+- 어떤 것은 Stack에 올라오고 어떤 것은 Heap에 올라오는가?
+    - Value 타입의 변수가 가지고 있는 데이터 -> Stack
+    - Reference 타입의 변수가 가지고 있는 데이터 -> Heap
+
+---
+
+# 대표적인 Value 타입
+
+- 모든 데이터 타입 (int, char, float, double, bool, ...)
+- 이외 우리가 나중에 만들게 될 모든 struct들
+
+# 대표적인 Reference 타입
+
+- 어레이
+- string (하지만 좀 특별한 성질들을 가지고 있습니다)
+- 이외 우리가 나중에 만들게 될 모든 class들
+
+---
+# Example
+```csharp
+static int Main(string[] args)
+{
+    int[] array = {1, 2, 3};
+    int a = 1;
+    ChangeArray(array);
+    ChangeNumber(a);
+    foreach (int item in array)
+    {
+        Console.WriteLine(item);
+    }
+    Console.WriteLine(a);
+}
+static int ChangeArray(int[] arr)
+{
+    arr[0] = 42;
+}
+static int ChangeNumber(int a)
+{
+    a = 42;
+}
+```
+---
+
+# Garbage Collection
+
+- C나 C++에서는 이 데이터 저장 창고에다가 데이터를 집어넣으면 프로그래머가 하나하나 다 메모리를 관리해야 했지만...
+    - remember malloc / free?
+- C#에서는 미개한 C와는 달리 신경쓸 필요가 없습니다!
+- C# 런타임에서 알아서 프로그램이 안 쓰는 메모리를 청소해좀
+
+---
+# Example
+
+```csharp
+static int Main(string[] args)
+{
+    {
+        string contents = "Hello World!";
+    }
+    // 여기서 contents를 접근할 수 없음
+    // contents는 알아서 메모리상에서 청소됨 (언젠진 잘 모르겠지만)
+}
+```
+
+---
+
+# 과제 2: 하노이의 탑 그리기
 
 - 이런 거 많이 해보셨죠?
+
 ```
     |          |          |
-   *|*         |          |
+    |          |          |
   **|**        |          |
  ***|***       |          |
-****|****      |          |
+****|****     *|*         |
 ```
-
+```csharp
+towerA = {4, 3, 2, 0}
+towerB = {1, 0, 0, 0}
+towerC = {0 ,0, 0, 0}
+```
 - 함수 ``void PrintTowers(int n, int[] towerA, int[] towerB, int[] towerC)``을 만들기
-    - n : 원판의 최대 개수
-    - towerA, towerB, towerC : 각 타워마다 들어있는 원판들
+    - n : 원판의 개수
+    - towerA, towerB, towerC : 각 타워마다 들어있는 원판들의 종류
 
 ---
 
@@ -306,7 +549,9 @@ int[] array = new int[3];
     <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
     </script>
     <script>
-      var slideshow = remark.create();
+      var slideshow = remark.create({
+          ratio: '16:10'
+          });
     </script>
     <script src="https://cdn.rawgit.com/William-Yeh/remark-zoom/master/remark-zoom.js" type="text/javascript"></script>
   </body>

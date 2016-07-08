@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Your Title Here</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!-- This is template for http://remarkjs.com/ by Ole Petter Bang -->
+    <!-- CSS modifcations by J. M. Lilly-->
+
+    <style type="text/css">
+      @import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'NanumGothic';letter-spacing:0.025em;}
+      h1, h2, h3 {
+        font-family: 'NanumGothic';
+        font-weight: normal;
+      }
+      .remark-slide-content h1 { font-size: 2.4em; color:#606060;font-weight: bold;letter-spacing:0.05em;margin-top:0em}
+      .remark-slide-content h2 { font-size: 1.55em;color:#606060;font-weight: bold;letter-spacing:0.05em;margin-top:0em}
+      .remark-slide-content h3 { font-size: 1.4em;color:#606060;font-weight: bold;letter-spacing:0.05em;margin-top:0em}
+      .remark-slide-content p { font-size: 1.4em; }
+      .remark-slide-content ol {font-size: 1.2em;}
+      .remark-slide-content ul {font-size: 1.2em;}
+      .remark-slide-content
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-fading { z-index: 9; }
+
+      /* Thanks to http://www.partage-it.com/animez-vos-presentations-remark-js/  (in French) */
+      /*
+      .remark-slide-container {transition: opacity 0.5s ease-out;opacity: 0;}
+      .remark-visible {transition: opacity 0.5s ease-out;opacity: 1;}
+      */
+
+      /* Two-column layout */
+      .left-column {
+        width: 50%;
+        float: left;
+      }
+      .right-column {
+        width: 49%;
+        float: right;
+        padding-top: 0em;
+        margin-top: 0em;
+        text-align: left;
+      }
+      .footnote {
+        position:absolute;
+        bottom: 1em;
+        left: 14em;
+        font-size: 0.7em;
+       }
+
+      /* Some special classes */
+      .title {font-size: 3.3em; color:#606060;font-weight:bold;letter-spacing:0.05em}
+      .subtitle {font-size: 1.4em}
+      .author {font-size: 1.4em; color:#606060;font-weight:bold;letter-spacing:0.02em}
+      .coauthor {font-size: 1.0em; color:#606060;font-weight:bold;letter-spacing:0.02em}
+      .institution {font-size: 1.0em;}
+      .date {font-size: 1.0em;font-style: italic}
+
+      .cite {font-size: 0.8em; color:#33AA99;font-style: italic}
+      .strike {color:salmon;text-decoration:line-through}
+
+      /*Set color scheme for links.*/
+      a {text-decoration: none; color: #666666;text-align:center; width: 24%}
+      /*Setting link properties is particular, do not change order below*/
+      a:visited {color:#666666}
+      a:hover {color:#33AA99}
+      a:active, a#active {color:#FF9700;}
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# 강의 2 : 객체지향 (class/property/Struct)
+---
+
+# 마저 설명하지 못 했던 부분들
+
+ref / out parameter
+
+variable arguments
+
+var
+
+---
+# ref parameter
+
+Value 타입의 문제점:
+
+```csharp
+static int Main(string[] args)
+{
+    int a = 1;
+    int b = 2;
+    Swap(a, b)
+    // still a = 1, b = 2;
+}
+static int Swap(int a, int b)
+{
+    int c = a;
+    a = b;
+    b = c;
+}
+```
+
+---
+# ref parameter
+
+어떤 Value 타입을 Reference로 가져오고 싶을 때는 ref를 씁니다
+```csharp
+static int Main(string[] args)
+{
+    int a = 1;
+    int b = 2;
+    Swap(ref a, ref b)
+}
+static int Swap(ref int a, ref int b)
+{
+    int c = a;
+    a = b;
+    b = c;
+}
+```
+---
+
+# out parameter
+
+하나의 함수에서 두 개 이상의 값을 리턴하고 싶을 때
+
+C# 는 지원 안함 (주륵... Lua는 되지롱)
+
+```
+local function QAR(a, b)
+    local q = a/b
+    local r = a%b
+    return q, r
+end
+
+local quotient, remainder = QAR(7, 3)
+```
+
+---
+# out parameter
+
+C#으로 따라해볼까...
+```csharp
+static void Main(string[] args)
+{
+    int[] results = QAR(7, 3);
+    int quotient = results[0];
+    int remainder = results[1];
+}
+static int[] QAR(int a, int b)
+{
+    return new int[2] {a/b, a%b};
+}
+```
+
+---
+# out parameter
+
+좀 더 깔끔한 방법
+
+```csharp
+static void Main(string[] args)
+{
+    int quotient, remainder;
+    QAR(a, b, quotient, remainder);
+}
+static void QAR(int a, int b, out int quotient, out int remainder)
+{
+    quotient = a / b;
+    remainder = a % b;
+}
+```
+
+C#/Unity의 함수들에서 가끔씩 쓰입니다...
+
+---
+# variable arguments
+
+```csharp
+static void Main(string[] args)
+{
+    int sum = AddAll(1, 2, 3, 4, 5, 6);
+}
+static int AddAll(params int[] list)
+{
+    int sum = 0;
+    foreach(int num in list)
+    {
+        sum += num;
+    }
+    return sum;
+}
+```
+
+---
+# var
+
+타입 이름이 길어지기 시작할 때 쓰면 좋다
+
+너무 과도하게 쓸 필요는 없다
+
+```csharp
+var str = "Hello World" // inferenced as string
+var i = 1; // inferenced as int
+var person = new PersonWithVeryLongClassName();
+```
+
+---
+# 동기
+
+코드를 작성하게 되면서 생기는 문제점들
+
+- 인간은 기계가 아니다
+- 인간은 기계가 아니다
+- 인간은 기계가 아니다
+
+---
+
+# 동기
+
+컴퓨터만 알아들을 수 있는 코드.
+
+<img style="width:50%" src="https://craftofcoding.files.wordpress.com/2013/10/pi_forspaghetti.jpg">
+
+--
+
+# 동기
+
+인간의 기억력에는 한계가 있기 때문에 쉽게 이해할 수 있는 추상화가 필요하다!
+
+데이터를 단순히 비트들의 조합으로 보지 말고, 행동을 할 수 있는 하나의 오브젝트로 생각해보자
+
+---
+
+# Example
+
+```csharp
+Ball ball = new Ball();
+Dog dog = new Dog();
+Person person = new Person(pet: dog);
+person.Throw(ball, dog);
+dog.Catch();
+```
+
+---
+
+# Real Example
+
+```csharp
+Random random = new Random();
+int nextRandomNumber = random.Next();
+int dieRoll = random.Next(6) + 1;
+```
+
+---
+
+# reference: null
+
+아무 오브젝트도 가르키고 있지 않을 때: null
+
+```csharp
+Random random = null;
+```
+
+만약에 이것을 쓰려고 하면...
+```csharp
+int num = random.Next();
+```
+-> NullReferenceException이라는 런타임 에러가 뜬다!
+
+---
+
+# reference assignment
+
+```csharp
+Random random1 = new Random();
+Random random2 = random1;
+// random1 and random2 are now referencing the same Random object
+```
+
+---
+# 새로운 클래스 만들기
+
+```csharp
+class Book
+{
+    private string title;
+    private string author;
+    private int pages;
+    private int wordCount;
+    public string note;
+}
+
+```
+---
+
+# private and public
+
+public : 어디서나 이 변수를 접근할 수 있음
+
+```csharp
+Book book = new Book();
+book.note = "This book is pretty bad"; // ok
+```
+
+private : 클래스의 정의 안에서만 이 변수를 접근할 수 있음
+```csharp
+Book book = new Book();
+book.title = "Necronomicon"; //
+```
+
+가능하면 변수를 private로 만드는 것이 좋다
+
+---
+
+# Constructor
+
+---
+
+# Adding Methods
+
+---
+
+# Static
+
+이제서야 설명이 들어가는군요...
+
+---
+
+# internal
+
+디폴트가 internal이에요. 아마 크게 걱정할 필요는 없을 것...
+---
+
+# Properties
+
+---
+
+# 그럼 끝.
+## 모두 수고하셨습니다!
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+          ratio: '16:10'
+          });
+    </script>
+    <script src="https://cdn.rawgit.com/William-Yeh/remark-zoom/master/remark-zoom.js" type="text/javascript"></script>
+  </body>
+</html>

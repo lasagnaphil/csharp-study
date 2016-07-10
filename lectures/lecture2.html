@@ -24,13 +24,6 @@
       .remark-slide-content ul {font-size: 1.2em;}
       .remark-slide-content
       .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
-      .remark-fading { z-index: 9; }
-
-      /* Thanks to http://www.partage-it.com/animez-vos-presentations-remark-js/  (in French) */
-      /*
-      .remark-slide-container {transition: opacity 0.5s ease-out;opacity: 0;}
-      .remark-visible {transition: opacity 0.5s ease-out;opacity: 1;}
-      */
 
       /* Two-column layout */
       .left-column {
@@ -75,10 +68,15 @@
 
 class: center, middle
 
-# 강의 2 : 객체지향 (class/property/Struct)
+# 강의 2 : 마저 설명하지 못 했던 부분들 + 객체지향 (class/property)
+
 ---
 
 # 마저 설명하지 못 했던 부분들
+
+function overloading
+
+casting
 
 ref / out parameter
 
@@ -87,6 +85,48 @@ variable arguments
 var
 
 ---
+
+# overloading
+
+이름은 같지만 서로 다른 패러미터를 갖는 함수들을 만들 수 있다
+
+```csharp
+static void PrintContents(int i)
+{
+    Console.WriteLine("Integer: " + i);
+}
+static void PrintContents(char c)
+{
+    Console.WriteLine("Character: " + c);
+}
+static void Main(string args[])
+{
+    PrintContents(1); // Integer : 1
+    PrintContents('c'); // Character : c
+}
+```
+
+---
+
+# overloading
+
+유의사항: return 타입은 overloading되지 않는다
+
+```csharp
+static int Calculate(double a, double b)
+{
+    return (int) a + b;
+}
+static double Calculate(double a, double b)
+{
+    return a + b;
+}
+```
+
+-> Error: Type '..' already defines a member called 'Calculate' with the same parameter types
+
+---
+
 # ref parameter
 
 Value 타입의 문제점:
@@ -108,9 +148,11 @@ static int Swap(int a, int b)
 ```
 
 ---
+
 # ref parameter
 
 어떤 Value 타입을 Reference로 가져오고 싶을 때는 ref를 씁니다
+
 ```csharp
 static int Main(string[] args)
 {
@@ -125,6 +167,7 @@ static int Swap(ref int a, ref int b)
     b = c;
 }
 ```
+
 ---
 
 # out parameter
@@ -133,7 +176,7 @@ static int Swap(ref int a, ref int b)
 
 C# 는 지원 안함 (주륵... Lua는 되지롱)
 
-```
+```lua
 local function QAR(a, b)
     local q = a/b
     local r = a%b
@@ -144,9 +187,11 @@ local quotient, remainder = QAR(7, 3)
 ```
 
 ---
+
 # out parameter
 
 C#으로 따라해볼까...
+
 ```csharp
 static void Main(string[] args)
 {
@@ -161,6 +206,7 @@ static int[] QAR(int a, int b)
 ```
 
 ---
+
 # out parameter
 
 좀 더 깔끔한 방법
@@ -181,6 +227,7 @@ static void QAR(int a, int b, out int quotient, out int remainder)
 C#/Unity의 함수들에서 가끔씩 쓰입니다...
 
 ---
+
 # variable arguments
 
 ```csharp
@@ -200,6 +247,7 @@ static int AddAll(params int[] list)
 ```
 
 ---
+
 # var
 
 타입 이름이 길어지기 시작할 때 쓰면 좋다
@@ -213,6 +261,11 @@ var person = new PersonWithVeryLongClassName();
 ```
 
 ---
+
+# 객체지향
+
+---
+
 # 동기
 
 코드를 작성하게 되면서 생기는 문제점들
@@ -229,7 +282,7 @@ var person = new PersonWithVeryLongClassName();
 
 <img style="width:50%" src="https://craftofcoding.files.wordpress.com/2013/10/pi_forspaghetti.jpg">
 
---
+---
 
 # 동기
 
@@ -237,14 +290,12 @@ var person = new PersonWithVeryLongClassName();
 
 데이터를 단순히 비트들의 조합으로 보지 말고, 행동을 할 수 있는 하나의 오브젝트로 생각해보자
 
----
-
-# Example
+Example:
 
 ```csharp
 Ball ball = new Ball();
 Dog dog = new Dog();
-Person person = new Person(pet: dog);
+Person person = new Person(dog);
 person.Throw(ball, dog);
 dog.Catch();
 ```
@@ -270,9 +321,11 @@ Random random = null;
 ```
 
 만약에 이것을 쓰려고 하면...
+
 ```csharp
 int num = random.Next();
 ```
+
 -> NullReferenceException이라는 런타임 에러가 뜬다!
 
 ---
@@ -286,6 +339,7 @@ Random random2 = random1;
 ```
 
 ---
+
 # 새로운 클래스 만들기
 
 ```csharp
@@ -299,6 +353,7 @@ class Book
 }
 
 ```
+
 ---
 
 # private and public
@@ -311,9 +366,10 @@ book.note = "This book is pretty bad"; // ok
 ```
 
 private : 클래스의 정의 안에서만 이 변수를 접근할 수 있음
+
 ```csharp
 Book book = new Book();
-book.title = "Necronomicon"; //
+book.title = "Necronomicon"; // compile error: can't access
 ```
 
 가능하면 변수를 private로 만드는 것이 좋다
@@ -322,9 +378,222 @@ book.title = "Necronomicon"; //
 
 # Constructor
 
+오브젝트를 생성하기 위해 사용되는 함수
+오브젝트를 생성하기 위한 여러가지 패러미터를 집어넣을 수 있다
+
+```csharp
+class Book
+{
+    private string title;
+    private string author;
+    private int pages;
+    private int wordcount;
+
+    public Book(string title)
+    {
+        this.title = title;
+    }
+}
+```
+
+```csharp
+// somewhere in main code...
+Book book = new Book("Necronomicon");
+```
+
 ---
 
-# Adding Methods
+# this?
+
+현재 인스턴스를 가르키는 reference
+
+```csharp
+
+class Book
+{
+    public string title; // title : instance variable
+    public Book(string title) // title : parameter
+    {
+        this.title = title;
+    }
+}
+```
+
+---
+
+# Constructor overloading
+
+그리고 일반 함수처럼 오버로딩 할 수 있습니다.
+
+```csharp
+class Book
+{
+    private string title;
+    private string author;
+    private int pages;
+    private int wordcount;
+
+    public Book(string title, string author)
+    {
+        this.title = title;
+        this.author = author;
+    }
+    public Book(string title, string author, int pages, int wordCount)
+    {
+        this(title, author); // Constructor 재사용
+        this.pages = pages;
+        this.wordCount = wordCount;
+    }
+}
+```
+
+---
+
+# Adding Methods (continued)
+
+```csharp
+class Book
+{
+    private string title;
+    ...
+    
+    public string GetTitle()
+    {
+        return title;
+    }
+
+    public void SetTitle(string title)
+    {
+        this.title = title;
+    }
+}
+```
+
+이런 것들을 Getter/Setter라고 부룹니다.
+
+---
+
+# 그냥 public으로 만들면 될 것을 왜???
+
+외부 사용자의 클래스 사용을 제어할 수 있기 때문이다.
+
+```csharp
+class Book
+{
+    private string title;
+    ...
+    
+    public void GetTitle()
+    {
+        return title;
+    }
+    public void SetTitle(string title)
+    {
+        if (title.Length <= 100)
+        {
+            this.title = title;
+        }
+        else
+        {
+            Console.WriteLine("The title is more than 100 characters!")
+            Console.WriteLine("Trimming title...");
+            this.title = title.Substring(0, 100);
+        }
+    }
+}
+```
+
+---
+
+# Getter/Setter를 좀 더 편하게
+
+C#의 Property 라는 기능을 사용합니다.
+
+```csharp
+class Book
+{
+    public string Title
+    {
+        get { return title; }
+        set 
+        {
+            if (title.Length <= 100)
+            {
+                title = value;
+            }
+            else
+            {
+                Console.WriteLine("Holy crap, the title is more than 100 characters!");
+                Console.WriteLine("Trimming title...");
+                title = value.Substring(0, 100);
+            }
+        }
+    }
+}
+```
+
+---
+
+# Getter/Setter를 좀 더 편하게
+
+```csharp
+Book book = new Book();
+book.Title = @"The history of the wars of New-England with the Eastern Indians;
+               or, a narrative of their continued perfidy and cruelty, from the
+               10th of August, 1703, to the peace renewed 13th of July, 1713. 
+               And from the 25th of July, 1722, to their submission 15th December, 1725,
+               which was ratified August 5th, 1726;";
+
+```
+
+---
+
+# Getter/Setter를 더욱 더욱 편하게
+
+```csharp
+class Book
+{
+    private string title;
+    public string Title
+    {
+        get { return title; }
+        set { title = value; }
+    }
+}
+```
+
+```csharp
+class Book
+{
+    public string Title { get; set; }
+}
+```
+
+---
+
+# Getter/Setter에 접근권한 붙이기
+
+```csharp
+class Book
+{
+    private string Title { get; private set; }
+    ...
+    public void MakeSequel()
+    {
+        Title += " 2"; // allowed
+    }
+}
+
+// outside of class Book
+class Program
+{
+    public void Main()
+    {
+        Book book = new Book("Necronomicon");
+        book.Title = "Necronomicon remastered"; // not allowed
+    }
+}
+```
 
 ---
 
@@ -334,12 +603,108 @@ book.title = "Necronomicon"; //
 
 ---
 
-# internal
+# 과제 3. 하노이의 탑 구현 (다음주 화요일까지)
 
-디폴트가 internal이에요. 아마 크게 걱정할 필요는 없을 것...
+지금까지 배워본 내용으로 본격적인 프로그램을 하나 짜 봅시다...
+
+재귀함수와 객체지향을 이용한 하노이 탑
+
 ---
 
-# Properties
+# Skeleton file
+
+Program.cs
+
+```csharp
+using System;
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        Hanoi hanoi = new Hanoi();
+        hanoi.Run();
+    }
+
+}
+```
+
+---
+
+# Skeleton file
+
+Hanoi.cs
+
+```csharp
+using System;
+
+public class Hanoi
+{
+    private HanoiTower[] towers;
+    public int NumOfDisks { get; private set; }
+    public int Turns { get; private set; }
+    
+    public Hanoi() {...}
+    
+    public void Run() {...}
+    private void ExecuteTurn(int n, HanoiTower source, HanoiTower via, HanoiTower dest) {...}
+    public void Draw() {...}
+    
+    private void DrawDisk(int n, int diskSize) {...}
+}
+```
+
+---
+
+# Skeleton file
+
+HanoiTower.cs
+
+```csharp
+using System;
+
+public class HanoiTower
+{
+    private readonly int maxDisks;
+    public int[] Disks { get; private set; }
+    public int TowerCount
+    {
+        get {...}
+    }
+
+    public bool Empty
+    {
+        get {...}
+    }
+
+    public HanoiTower(int maxDisks) {...}
+    public void InsertAllDisks() {...}
+    public void InsertDisk() {...}
+    public void RemoveDisk() {...}
+}
+```
+
+---
+
+# Output
+
+```
+Enter number of disks : 
+2
+
+  |  	  |  	  |  
+**|**	 *|* 	  |  
+
+
+  |  	  |  	  |  
+  |  	 *|* 	**|**
+
+
+  |  	  |  	 *|* 
+  |  	  |  	**|**
+
+Minimum number of moves : 3
+```
 
 ---
 

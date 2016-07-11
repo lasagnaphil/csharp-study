@@ -176,7 +176,7 @@ static int Swap(ref int a, ref int b)
 
 C# 는 지원 안함 (주륵... Lua는 되지롱)
 
-```lua
+```
 local function QAR(a, b)
     local q = a/b
     local r = a%b
@@ -214,13 +214,13 @@ static int[] QAR(int a, int b)
 ```csharp
 static void Main(string[] args)
 {
-    int quotient, remainder;
-    QAR(a, b, quotient, remainder);
+    int remainder;
+    int quotient = QAR(a, b, out remainder);
 }
-static void QAR(int a, int b, out int quotient, out int remainder)
+static void QAR(int a, int b, out int remainder)
 {
-    quotient = a / b;
     remainder = a % b;
+    return a / b;
 }
 ```
 
@@ -296,9 +296,19 @@ Example:
 Ball ball = new Ball();
 Dog dog = new Dog();
 Person person = new Person(dog);
+person.name = "H. P. Lovecraft"
 person.Throw(ball, dog);
 dog.Catch();
 ```
+
+---
+
+# class / instance
+
+- Class : instance를 생성하는 틀
+- Instance : class로부터 생성된 오브젝트
+
+.center[![class and instance](http://cfile7.uf.tistory.com/image/110B150E4C74CC02031FF7)]
 
 ---
 
@@ -317,13 +327,13 @@ int dieRoll = random.Next(6) + 1;
 아무 오브젝트도 가르키고 있지 않을 때: null
 
 ```csharp
-Random random = null;
+Dog dog = null;
 ```
 
 만약에 이것을 쓰려고 하면...
 
 ```csharp
-int num = random.Next();
+dog.Catch();
 ```
 
 -> NullReferenceException이라는 런타임 에러가 뜬다!
@@ -333,15 +343,37 @@ int num = random.Next();
 # reference assignment
 
 ```csharp
-Random random1 = new Random();
-Random random2 = random1;
+Dog dog1 = new Dog();
+Dog dog2 = dog1;
 // random1 and random2 are now referencing the same Random object
+
+dog1.Name = "덕구"
+Console.WriteLine(dog2.Name) // Output: 덕구
+```
+
+---
+
+# Review : Value vs Reference
+
+Value semantics
+
+```csharp
+int a = 1;
+int b = a;
+```
+
+Reference semantics
+
+```csharp
+Dog dog1 = new Random();
+Dog dog2 = dog1;
 ```
 
 ---
 
 # 새로운 클래스 만들기
 
+클래스 안에 선언되어 있는 변수들을 필드(field)라고 부른다.
 ```csharp
 class Book
 {
@@ -387,7 +419,7 @@ class Book
     private string title;
     private string author;
     private int pages;
-    private int wordcount;
+    private int wordCount;
 
     public Book(string title)
     {
@@ -421,6 +453,42 @@ class Book
 
 ---
 
+# 만약에 default constructor를 만들어주지 않으면?
+
+컴파일러가 대신 만들어줍니다
+
+```csharp
+class Book
+{
+    public string title;
+
+    /* 생성되는 코드
+    public Book()
+    {
+    } */
+}
+```
+
+---
+
+# Default values
+
+title이라는 필드에 값을 집어넣어주지 않는다면 어떻게 될까?
+
+바로 title의 default constructor이 불러진다.
+
+```csharp
+class Book
+{
+    public string title;
+}
+
+Book book = new Book();
+Console.ReadLine(book.title);
+```
+
+---
+
 # Constructor overloading
 
 그리고 일반 함수처럼 오버로딩 할 수 있습니다.
@@ -440,11 +508,100 @@ class Book
     }
     public Book(string title, string author, int pages, int wordCount)
     {
-        this(title, author); // Constructor 재사용
+        this.title = title;
+        this.author = author;
         this.pages = pages;
         this.wordCount = wordCount;
     }
 }
+```
+
+---
+
+# Constructor overloading
+
+```csharp
+class Book
+{
+    private string title;
+    private string author;
+    private int pages;
+    private int wordcount;
+
+    public Book(string title, string author)
+    {
+        this(title, author, 0, 0);
+    }
+    public Book(string title, string author, int pages, int wordCount)
+    {
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.wordCount = wordCount;
+    }
+}
+```
+
+---
+
+# Constructor overloading
+
+```csharp
+{
+    private string title;
+    private string author;
+    private int pages;
+    private int wordcount;
+
+    public Book(string title, string author) : this(title, author, 0, 0)
+    public Book(string title, string author, int pages, int wordCount)
+    {
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.wordCount = wordCount;
+    }
+}
+```
+
+---
+
+# Adding Methods
+
+클래스 안에 선언되어 있는 함수들을 메서드(Method)라고 부른다.
+
+```csharp
+class Book
+{
+    ...
+    public void PrintContents()
+    {
+        Console.WriteLine("Title : " + title);
+        Console.WriteLine("Author : " + title);
+        Console.WriteLine("Pages : " + title);
+        Console.WriteLine("Word Count : " + title);
+    }
+    public void AssignWordCountFromText(string text)
+    {
+        wordCount = text.Split(' ').Length;
+    }
+}
+```
+---
+
+# Adding Methods
+
+```csharp
+Book book = new Book("Necronomicon", "Lovecraft", 150, 0);
+book.AssignWordCountFromText("There is no content in this book...");
+book.PrintContents();
+```
+
+```
+Title : Necronomicon
+Author : Lovecraft
+Pages : 150
+Word Count : 7
 ```
 
 ---
@@ -456,7 +613,7 @@ class Book
 {
     private string title;
     ...
-    
+
     public string GetTitle()
     {
         return title;
@@ -482,7 +639,7 @@ class Book
 {
     private string title;
     ...
-    
+
     public void GetTitle()
     {
         return title;
@@ -515,7 +672,7 @@ class Book
     public string Title
     {
         get { return title; }
-        set 
+        set
         {
             if (title.Length <= 100)
             {
@@ -540,7 +697,7 @@ class Book
 Book book = new Book();
 book.Title = @"The history of the wars of New-England with the Eastern Indians;
                or, a narrative of their continued perfidy and cruelty, from the
-               10th of August, 1703, to the peace renewed 13th of July, 1713. 
+               10th of August, 1703, to the peace renewed 13th of July, 1713.
                And from the 25th of July, 1722, to their submission 15th December, 1725,
                which was ratified August 5th, 1726;";
 
@@ -590,7 +747,7 @@ class Program
     public void Main()
     {
         Book book = new Book("Necronomicon");
-        book.Title = "Necronomicon remastered"; // not allowed
+        book.Title = "Necronomicon remastered"; // not allowed!!!
     }
 }
 ```
@@ -600,6 +757,62 @@ class Program
 # Static
 
 이제서야 설명이 들어가는군요...
+
+non-static -> instance에 관한 정보
+static -> class에 관한 정보
+
+- non-static한 멤버들은 instance 각각이 가지고 있는 정보이고,
+- static한 멘버들은 해당 클래스의 모든 instance가 공유하고 있는 정보이다.
+
+본 교재의 (주관적인) 의견으로는 "static" 보다 "shared"가 더 올바른 표현이라고 함.
+
+---
+
+# Static (example 1)
+
+```csharp
+public class Book
+{
+    public static int maxTitleLength = 10; // static initialization
+
+    public string Title;
+    {
+        get { return title; }
+        set
+        {
+            if (title.Length <= maxTitleLength)
+            {
+                title = value;
+            }
+            else
+            {
+                Console.WriteLine("Holy crap, the title is more than " + maxTitleLength + " characters!");
+                Console.WriteLine("Trimming title...");
+                title = value.Substring(0, maxTitleLength);
+            }
+        }
+    }
+}
+```
+
+---
+
+# Static
+
+출력 결과는?
+
+```csharp
+Book book1 = new Book();
+Book book2 = new Book();
+
+Book.maxTitleLength = 20;
+book1.Title = "Sun-Beams May Be Extracted From Cucumbers, But the Process is Tedious";
+Console.PrintLine(book1.Title);
+
+Book.maxTitleLength = 100;
+book2.Title = "The Book of Marmalade: Its Antecedents, Its History and Its Role in the World Today";
+Console.PrintLine(book2.Title);
+```
 
 ---
 
@@ -643,13 +856,13 @@ public class Hanoi
     private HanoiTower[] towers;
     public int NumOfDisks { get; private set; }
     public int Turns { get; private set; }
-    
+
     public Hanoi() {...}
-    
+
     public void Run() {...}
     private void ExecuteTurn(int n, HanoiTower source, HanoiTower via, HanoiTower dest) {...}
     public void Draw() {...}
-    
+
     private void DrawDisk(int n, int diskSize) {...}
 }
 ```
@@ -689,18 +902,18 @@ public class HanoiTower
 # Output
 
 ```
-Enter number of disks : 
+Enter number of disks :
 2
 
-  |  	  |  	  |  
-**|**	 *|* 	  |  
+  |  	  |  	  |
+**|**	 *|* 	  |
 
 
-  |  	  |  	  |  
+  |  	  |  	  |
   |  	 *|* 	**|**
 
 
-  |  	  |  	 *|* 
+  |  	  |  	 *|*
   |  	  |  	**|**
 
 Minimum number of moves : 3

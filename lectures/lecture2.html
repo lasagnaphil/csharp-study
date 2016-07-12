@@ -160,7 +160,7 @@ static int Main(string[] args)
     int b = 2;
     Swap(ref a, ref b)
 }
-static int Swap(ref int a, ref int b)
+static void Swap(ref int a, ref int b)
 {
     int c = a;
     a = b;
@@ -217,7 +217,7 @@ static void Main(string[] args)
     int remainder;
     int quotient = QAR(a, b, out remainder);
 }
-static void QAR(int a, int b, out int remainder)
+static int QAR(int a, int b, out int remainder)
 {
     remainder = a % b;
     return a / b;
@@ -374,6 +374,7 @@ Dog dog2 = dog1;
 # 새로운 클래스 만들기
 
 클래스 안에 선언되어 있는 변수들을 필드(field)라고 부른다.
+
 ```csharp
 class Book
 {
@@ -499,7 +500,7 @@ class Book
     private string title;
     private string author;
     private int pages;
-    private int wordcount;
+    private int wordCount;
 
     public Book(string title, string author)
     {
@@ -553,7 +554,7 @@ class Book
     private int pages;
     private int wordcount;
 
-    public Book(string title, string author) : this(title, author, 0, 0)
+    public Book(string title, string author) : this(title, author, 0, 0) {}
     public Book(string title, string author, int pages, int wordCount)
     {
         this.title = title;
@@ -577,9 +578,9 @@ class Book
     public void PrintContents()
     {
         Console.WriteLine("Title : " + title);
-        Console.WriteLine("Author : " + title);
-        Console.WriteLine("Pages : " + title);
-        Console.WriteLine("Word Count : " + title);
+        Console.WriteLine("Author : " + author);
+        Console.WriteLine("Pages : " + pages);
+        Console.WriteLine("Word Count : " + wordCount);
     }
     public void AssignWordCountFromText(string text)
     {
@@ -669,12 +670,13 @@ C#의 Property 라는 기능을 사용합니다.
 ```csharp
 class Book
 {
+    private string title = "";
     public string Title
     {
         get { return title; }
         set
         {
-            if (title.Length <= 100)
+            if (value.Length <= 100)
             {
                 title = value;
             }
@@ -733,7 +735,7 @@ class Book
 ```csharp
 class Book
 {
-    private string Title { get; private set; }
+    public string Title { get; private set; }
     ...
     public void MakeSequel()
     {
@@ -881,7 +883,7 @@ public class HanoiTower
 {
     private readonly int maxDisks;
     public int[] Disks { get; private set; }
-    public int TowerCount
+    public int DiskCount
     {
         get {...}
     }

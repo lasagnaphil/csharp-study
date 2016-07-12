@@ -4,7 +4,7 @@ public class HanoiTower
 {
     private readonly int maxDisks;
     public int[] Disks { get; private set; }
-    public int TowerCount
+    public int DiskCount
     {
         get 
         {
@@ -17,7 +17,7 @@ public class HanoiTower
     }
     public bool Empty
     {
-        get { return TowerCount == 0; }
+        get { return DiskCount == 0; }
     }
 
     public HanoiTower(int maxDisks)
@@ -36,23 +36,23 @@ public class HanoiTower
 
     public void InsertDisk(int diskSize)
     {
-        if (TowerCount == maxDisks)
+        if (DiskCount == maxDisks)
         {
             Console.WriteLine("Tower is full!");
             return;
         }
-        Disks[TowerCount] = diskSize;
+        Disks[DiskCount] = diskSize;
     }
 
     public int RemoveDisk()
     {
-        if (TowerCount == 0)
+        if (DiskCount == 0)
         {
             Console.WriteLine("Tower is empty!");
             return 0;
         }
-        int removedDisk = Disks[TowerCount - 1];
-        Disks[TowerCount - 1] = 0;
+        int removedDisk = Disks[DiskCount - 1];
+        Disks[DiskCount - 1] = 0;
         return removedDisk;
     }
 

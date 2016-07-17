@@ -68,7 +68,7 @@
 
 class: center, middle
 
-# 강의 4 : +alpha, Struct, Inheritance
+# 강의 4 : +alpha, struct, operator overloading
 
 ---
 
@@ -77,25 +77,120 @@ class: center, middle
 함수에 패러미터를 넣어주지 않았을 때 사용되는 가본값을 지정할 수 있습니다.
 
 ```csharp
-
+void PrintToConsole(string text, bool allCaps = false)
+{
+    if (allCaps)
+        Console.WriteLine(text.ToUpper());
+    else
+        Console.WriteLine(text);
+}
 ```
 
 ---
 
 # Getter-only methods
 
+프로퍼티에 Getter만 구현하는 경우도 있습니다
+
+```csharp
+public class StopWatch
+{
+    public long seconds;
+    public int Minutes
+    {
+        get { return seconds/60; }
+    }
+    public int Hours
+    {
+        get { return seconds/3600; }
+    }
+    ...
+}
+```
+
+---
+
+# 수업을 진행하기 전에 잠깐만 퀴즈! (Value vs Reference, Stack vs Heap)
+
+True or False
+
+1. 스택에 있는 모든 데이터는 코드 어디서나 접근할 수 있다.
+2. Value 타입의 내용물은 힙에 저장될 수 있다.
+3. Value 타입의 내용물은 언제나 힙에 저장된다.
+4. Reference 타입의 내용물은 언제나 힙에 저장된다.
+5. Garbage Collector는 스택과 힙에 있는 사용하지 않는 데이터를 정리해준다.
+6. Value 타입에 null을 줄 수 있다.
+7. a와 b가 Reference 타입이고, 같은 오브젝트를 가르키면, a의 변경사항이 b에 반영된다.
+8. a와 b가 같은 값을 가지고 있는 Value 타입이라면, a의 변경사항이 b에 반영된다.
+
+---
+
+# 2에 대한 설명
+
+.center[<img src="value-vs-reference-1.PNG" width="800">]
+
+```csharp
+int[] numbers = new int[] {2, 3, 4};
+```
+
+---
+
+# 문제 하나 더
+
+```csharp
+static int Main(string args[])
+{
+    int[] array = new int[] {1, 2, 3};
+    Console.WriteLine("{0}, {1}, {2}", array[0], array[1], array[2]);
+    ChangeArray(arr);
+    Console.WriteLine("{0}, {1}, {2}", array[0], array[1], array[2]);
+}
+static void ChangeArray(int[] arr)
+{
+    arr = new int[] {4, 5, 6};
+}
+```
+
+---
+
+# 문제 하나 더
+
+```csharp
+static int Main(string args[])
+{
+    int[] array = new int[] {1, 2, 3};
+    Console.WriteLine("{0}, {1}, {2}", array[0], array[1], array[2]);
+    ChangeArray(arr);
+    Console.WriteLine("{0}, {1}, {2}", array[0], array[1], array[2]);
+}
+static void ChangeArray(int[] arr)
+{
+    arr = new int[] {4, 5, 6};
+}
+```
+
+함정: new를 부르는 순간 기존 array와 arr는 다른 오브젝트를 가르키게 됩니다.
+
+그리고 함수에 레퍼런스 타입의 오브젝트가 패러미터로 들어오면 레퍼런스가 **복사** 됩니다.
+
+---
+
+# Struct
+
 ---
 
 # Struct
 
 Reference 타입이 아닌 Value 타입의 오브젝트를 만들고 싶다면?
-Ex. Vector3
+
+ex. Vector2i
 
 ```csharp
-Vector3 vec1 = new Vector3(1f, 4f, 2f);
-Vector3 vec2 = vec1;
-vec2 = new Vector3(5f, 4f, 2f);
-Console.WriteLine("({0}, {1}, {2})", vec1.x, vec1.y, vec1.z);
+Vector2i vec1 = new Vector2i(1, 2);
+Vector2i vec2 = vec1;
+vec2.x = 3;
+Console.WriteLine("({0}, {1})", vec1.x, vec1.y);
+Console.WriteLine("({0}, {1})", vec2.x, vec2.y);
 ```
 
 ---
@@ -120,18 +215,185 @@ public struct Vector2i
 
 ---
 
+# Struct의 사용 용도
+
+- 자주 생성하게 되는 데이터 덩어리들 (heap 보다 stack에 보관하는 것이 더 효율적이다)
+- 메모리 할당량이 크지 않은 값들 (즉 데이터가 copy되도 별 상관 없는 오브젝트들)
+
+C++의 struct하고는 의미가 매우 다릅니다!
+
 ---
 
-# Inheritance
+# 사실...
 
-# object
+지금까지 우리가 알고있던 기본 타입들 (int, float, bool, string 등)은 모두 struct였습니다!
 
-C#에서
+```csharp
+int i = 0;
+float f = 0f;
+string str = "";
+```
+
+```csharp
+Int32 i = new Int32();
+Single f = new Single();
+String str = new String();
+```
+
 ---
 
-# virtual/override
+# 사실...
 
-# Polymorphism
+<img src="struct-primitives.PNG" width="400">
+
+---
+
+# readonly
+
+- 하노이 탑에서 한번 등장하긴 했지만 제대로 설명을 안해서...
+
+readonly 필드 -> 선언 이후 값을 바꾸는 것이 불가능
+
+```csharp
+public struct Vector2i
+{
+    public readonly int x;
+    public readonly int y;
+    public Vector2i(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+}
+```
+
+---
+
+# readonly
+
+```csharp
+Vector2i vec = new Vector2i(1, 2);
+// allowed
+Console.WriteLine("{0}, {1}", vec.x, vec.y);
+// not allowed
+vec.x = 6;
+```
+
+---
+
+# Immutable value types
+
+보통 struct는 데이터를 변화시킬 수 없는 타입으로 만드는게 좋습니다
+
+Value 타입의 오브젝트 상태를 변화시킬 수 있으면 Value 타입인지 Reference 타입인지 혼동할 수 있어요
+
+---
+
+class: center, middle
+
+# string에 관한 오해
+
+---
+
+# 전에 나왔었던 질문
+
+string이 Reference 타입이라고 하지 않았나요???
+
+```csharp
+public static Main()
+{
+    string name = "Mighty No. 9";
+    Console.WriteLine(name); // Mighty No. 9
+    AppendToString(name);
+    Console.WriteLine(name); // Mighty No. 9
+}
+public static AppendToString(string text)
+{
+    text += " The Sequel";
+}
+```
+
+이러한 이유는 string이 Reference 타입이면서도 immutable하기 때문입니다
+
+---
+
+# 실제로 일어나는 일
+
+```csharp
+public static Main()
+{
+    string name = "Mighty No. 9";
+    Console.WriteLine(name);
+    AppendToString(name);
+    Console.WriteLine(name);
+}
+public static AppendToString(string text)
+{
+    text = text + " The Sequel";
+           *********************
+                |
+           (이것이 하나의 새로운 string 오브젝트)
+}
+```
+
+
+---
+
+# 하여튼 가장 중요한 것은...
+
+class -> Reference Type
+
+struct -> Value Type
+
+---
+
+# Inheritance (상속)
+
+이젠 상속이라는 개념에 대해 알아봅시다.
+
+---
+
+# Homework 3 맛보기
+
+혹시 이런 게임을 아시나요?
+
+<img src="text-adventure-1.jpg" width="400">
+
+---
+
+# 텍스터 어드벤쳐 게임
+
+스케일은 상관 없습니다. 마음껏 상상력을 발휘하세요
+
+---
+
+# 구현해야 하는 것
+
+inheritance / polymorphism으로 설계된 그리드 형태의 방들.
+
+플레이어의 텍스트 입력을 알아들을 수 있는 parser.
+
+인벤토리 관리 시스템.
+
+(시간이 남는다면) 다양한 퍼즐/이벤트 등.
+
+---
+
+# 보너스
+
+전투 시스템.
+
+JSON 파일에서 맵 로딩.
+
+단순 그리드 형태가 아닌 방 구조.
+
+---
+
+# 유의사항
+
+아직 시작하진 말아주세요! (polymorphism/IEnuerable쪽을 다루고 진행할 예정입니다)
+
+---
 
 # 그럼 끝.
 ## 모두 수고하셨습니다!

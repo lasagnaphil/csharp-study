@@ -244,7 +244,7 @@ String str = new String();
 
 # 사실...
 
-<img src="struct-primitives.PNG" width="400">
+<img src="struct-primitives.PNG" width="800">
 
 ---
 
@@ -336,7 +336,6 @@ public static AppendToString(string text)
 }
 ```
 
-
 ---
 
 # 하여튼 가장 중요한 것은...
@@ -353,27 +352,255 @@ struct -> Value Type
 
 ---
 
+# Inheritance
+
+코드를 짜다 보면 클래스가 더욱 많아지기 시작하고... 공통되는 요소들을 찾기 시작한다.
+
+(특히 게임 개발을 하다 보면 이런 일이 많이 생긴다.)
+
+```csharp
+public class Monster
+{
+    public int hp;
+    public int damage;
+    public float criticalHitModifier;
+}
+public class Player
+{
+    public int hp;
+    public int damage;
+    public int money;
+}
+public class Magician
+{
+    public int hp;
+    public int damage;
+    public int mp;
+    private Skill[] skills;
+}
+```
+
+---
+
+# 뭔가 반복을 많이 하고 있는 것 같은데...
+
+이들이 가지고 있는 공통적인 요소 : Hp, Damage 프로퍼티
+
+하나로 묶을 수 없을까?
+
+---
+
+# Inheritance
+
+```csharp
+public class Creature
+{
+    public int hp;
+    public int damage;
+}
+public class Monster : Creature
+{
+    public float criticalHitModifier;
+}
+public class Player : Creature
+{
+    public int money;
+}
+public class Magician : Creature
+{
+    public int mp;
+    private Skill[] skills;
+}
+```
+
+하드코딩을 정말로 많이 줄이게 되었죠?
+
+---
+
+# 유의사항
+
+상속 구조는 무조건 is-a-relationship여야 한다!
+
+A Monster is a Creature
+A Player is a Creature
+A Magician is a Creature
+
+만약에 is-a가 안 통한다면 상속 구조를 잘못 짠 것.
+
+---
+
+# 유의사항
+
+상속이 적용하는 것들은...
+
+- field
+- member
+- property
+
+적용되지 않는 것들은...
+
+- Constructor
+
+---
+
+# Using inheritance
+
+그럼 한번 제대로 클래스 몇개를 구현해 봅시다.
+
+```csharp
+public class Creature
+{
+    public int Hp { get; set; }
+    public int Damage { get; set; }
+
+    public void Attack(Creature creature)
+    {
+        creature.Hp -= Damage;
+    }
+
+    public Creature() : this(100, 0) {}
+    public Creature(int hp, int damage)
+    {
+        Hp = hp;
+        Damage = damage;
+    }
+}
+```
+
+---
+
+# constructor 상속받기
+
+```csharp
+public class Player : Creature
+{
+    public int Money { get; private set; }
+
+    public Player() : this(200, 20, 100) {}
+    public Player(int hp, int damage, int money) : base(hp, damage)
+    {
+        Money = money;
+    }
+}
+```
+
+---
+
+# 상속받은 클래스 사용하기
+
+```csharp
+Player player = new Player(100, 20, 1000);
+
+Console.WriteLine(player.Hp);
+Console.WriteLine(player.Damage);
+Console.WriteLine(player.Money);
+```
+
+```csharp
+Player player = new Player(100, 20, 1000); // okay
+
+Creature player = new Player(100, 20, 1000); // okay
+
+Player player = new Creature(100, 20, 1000); // compile error
+```
+
+---
+
+# 타입 체크
+
+```csharp
+Creature creature = new Player(1000);
+if (creature is Player)
+{
+    Console.WriteLine("The current creature is Player!");
+}
+```
+
+---
+
+# 오브젝트 타입 변경하기 (casting)
+
+생각해보니까 이걸 왜 아직까지 말하지 않았는진 모르겠지만...
+
+변수의 타입을 변경할 수 있고, 이것을 casting이라고 합니다
+
+implicit casting:
+
+```csharp
+int score = 10;
+float scoreAsFloat = score;
+
+Player player = new Player();
+Creature creature = player;
+```
+
+explicit casting:
+
+```csharp
+double score = 10.0;
+float scoreAsFloat = (float)score;
+
+Creature creature = new Player();
+Player player = (Player)creature;
+```
+
+---
+
+# 오브젝트 타입 변경하기 (casting)
+
+하지만 호환되지 않는 타입을 변경할 경우에는 컴파일러 에러, 더 안 좋은 경우 런타임 에러가 납니다.
+
+```csharp
+string scoreStr = "100";
+int score = (int)scoreStr; // compile error (cannot convert type 'string' to 'int')
+
+Creature creature = new Magician();
+Player player = (Player)creature; // runtime error (InvalidCastException)
+```
+
+# 상속 구조에서 타입 변환
+
+```csharp
+if (player is Player)
+{
+    Player player = (Player)creature;
+    // use player...
+}
+```
+
+# 좀 더 안전하고 간편한 타입 변환 (as 키워드)
+
+```csharp
+Player player = creature as Player;
+if (player != null)
+{
+    // use player...
+}
+```
+
+---
+
 # Homework 3 맛보기
 
 혹시 이런 게임을 아시나요?
 
-<img src="text-adventure-1.jpg" width="400">
+<img src="text-adventure-1.jpg" width="800">
 
 ---
 
 # 텍스터 어드벤쳐 게임
 
-스케일은 상관 없습니다. 마음껏 상상력을 발휘하세요
+3주정도의 시간 안에 스터디에서 배운 내용을 바탕으로 콘솔에서 뭔가 재밌게 할 수 있는 게임을 만들어보자!
 
 ---
 
 # 구현해야 하는 것
 
-inheritance / polymorphism으로 설계된 그리드 형태의 방들.
+inheritance와 polymorphism으로 설계된 그리드 형태의 방들.
 
 플레이어의 텍스트 입력을 알아들을 수 있는 parser.
 
-인벤토리 관리 시스템.
+간단한 아이템 / 인벤토리 시스템.
 
 (시간이 남는다면) 다양한 퍼즐/이벤트 등.
 
@@ -381,17 +608,100 @@ inheritance / polymorphism으로 설계된 그리드 형태의 방들.
 
 # 보너스
 
-전투 시스템.
+전투 시스템. (+ 60)
 
-JSON 파일에서 맵 로딩.
+JSON 파일에서 맵 로딩. (+ 80)
 
-단순 그리드 형태가 아닌 방 구조.
+단순 그리드 형태가 아닌 방 구조. (+ 100)
 
 ---
 
-# 유의사항
+# 첫 번째 Task
 
-아직 시작하진 말아주세요! (polymorphism/IEnuerable쪽을 다루고 진행할 예정입니다)
+다음과 같은 클래스들을 만듭니다.
+
+- GameWorld
+- Player
+- Cell
+- Door
+
+---
+
+# 대략적인 클래스 구조
+
+GameWorld
+
+- Cell 오브젝트들을 그리드 형태로 가지고 있어야 함
+
+Player
+
+- 현재 맵에서의 위치 정보를 가지고 있어야 함. (int x, int y)
+
+Cell
+
+- 칸 하나를 나타냄
+- 이 셀에 대한 텍스트 정보와 함께
+- 이 셀에 있는 Obstacle의 리스트를 가지고 있음.
+
+Obstacle (base class)
+
+- 플레이어를 막는 오브젝트 (지금은 벽의 역활을 함)
+
+Direction (enum)
+
+- 4개의 방향을 나타냄
+
+---
+
+# Input 받기
+
+```
+Welcome to the Mighty No. 9 Text Adventure Game!
+
+■ ■ ■ ■ ■ ■ ■ d ■ ■ ■
+■ . . . ■ . . . ■ . ■
+■ . ■ . ■ . ■ l ■ . ■
+■ . . . d . ■ . . . ■
+■ ■ ■ ■ ■ l ■ ■ ■ ■ ■
+■ . . . l . d . ■ . ■
+■ ■ ■ . ■ . ■ ■ ■ l ■
+■ . ■ . ■ . d . . . ■
+■ l ■ ■ ■ . ■ . ■ . ■
+■ . . . . . d . . . ■
+■ d ■ ■ ■ ■ ■ ■ ■ ■ ■
+■ p ■ . ■ . ■ . ■ . ■
+■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■
+
+You are in an empty room.
+
+[Enter a command] north
+
+Opening door...
+You are in an empty room.
+
+[Enter a command] west
+
+A wall is blocking your way.
+
+[Enter a command] dir
+
+Available directions: north(locked door), east, south(door)
+
+[Enter a command] east
+
+You are in an empty room.
+
+[Enter a command]
+
+```
+
+---
+
+# 공식적으로 과제는 토요일에 내겠습니다
+
+왜냐하면 아직 안 배운 내용이 너무나 많기 때문에
+
+지금은 하지 마세요...
 
 ---
 

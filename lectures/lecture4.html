@@ -558,6 +558,8 @@ Creature creature = new Magician();
 Player player = (Player)creature; // runtime error (InvalidCastException)
 ```
 
+---
+
 # 상속 구조에서 타입 변환
 
 ```csharp
@@ -567,6 +569,8 @@ if (player is Player)
     // use player...
 }
 ```
+
+---
 
 # 좀 더 안전하고 간편한 타입 변환 (as 키워드)
 
@@ -588,7 +592,7 @@ if (player != null)
 
 ---
 
-# 텍스터 어드벤쳐 게임
+# 텍스트 어드벤쳐 게임
 
 3주정도의 시간 안에 스터디에서 배운 내용을 바탕으로 콘솔에서 뭔가 재밌게 할 수 있는 게임을 만들어보자!
 
@@ -655,22 +659,9 @@ Direction (enum)
 
 # Input 받기
 
+<img src="text-adventure-2.PNG" width="100">
 ```
 Welcome to the Mighty No. 9 Text Adventure Game!
-
-■ ■ ■ ■ ■ ■ ■ d ■ ■ ■
-■ . . . ■ . . . ■ . ■
-■ . ■ . ■ . ■ l ■ . ■
-■ . . . d . ■ . . . ■
-■ ■ ■ ■ ■ l ■ ■ ■ ■ ■
-■ . . . l . d . ■ . ■
-■ ■ ■ . ■ . ■ ■ ■ l ■
-■ . ■ . ■ . d . . . ■
-■ l ■ ■ ■ . ■ . ■ . ■
-■ . . . . . d . . . ■
-■ d ■ ■ ■ ■ ■ ■ ■ ■ ■
-■ p ■ . ■ . ■ . ■ . ■
-■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■
 
 You are in an empty room.
 

@@ -170,14 +170,14 @@ class Creature
 
 # 상속된 클래스만의 특별한 메서드
 ```csharp
-class Monster
+class Monster : Creature
 {
     public float DamageModifier { get; set; }
 
     public void Attack(Creature creature)
     {
         Random random = new Random();
-        if (r.Next(0, 5) == 0)
+        if (random.Next(0, 5) == 0)
             creature.Hp -= Damage * (1 + damageModifier);
         else
             creature.Hp -= Damage;
@@ -219,7 +219,7 @@ class Creature
     }
     ...
 }
-class Monster
+class Monster : Creature
 {
     ...
     public override void Attack(Creature creature)
@@ -282,17 +282,23 @@ SearchEngine searchEngine = new SearchEngine();
 # abstract class
 
 ```csharp
-class SearchEngine
+abstract class SearchEngine
 {
     public abstract string[] Search(string findThis);
 }
 class GoogleSearchEngine : SearchEngine
 {
-    public override string[] Search(string findThis);
+    public override string[] Search(string findThis)
+    {
+        // ... implement this
+    }
 }
 class NaverSearchEngine : SearchEngine
 {
     public override string[] Search(string findThis);
+    {
+        // ... implement this
+    }
 }
 ```
 
@@ -311,17 +317,17 @@ class: center, middle
 # GameObject pattern
 
 ```csharp
-class GameObject
+abstract class GameObject
 {
     public abstract void Update();
     public abstract void Draw();
 }
-class Monster
+class Monster : GameObject
 {
     public override void Update() {...}
     public override void Draw() {...}
 }
-class Player
+class Player : GameObject
 {
     public override void Update() {...}
     public override void Draw() {...}
@@ -434,7 +440,7 @@ interface IFileWriter
 
 ---
 
-# Using interfaces
+# Implementing interfaces
 
 ```csharp
 class TextFileWriter : IFileWriter
@@ -471,7 +477,7 @@ fileWriters[2] = new DocxFileWriter();
 
 foreach(IFileWriter fileWriter in fileWriters)
 {
-    fileWriter.Write("path/to/file" = fileWriter.Extension);
+    fileWriter.Write("path/to/file" + fileWriter.Extension);
 }
 ```
 
@@ -487,6 +493,12 @@ class Airplane : GameObject, IFlyable, IAttackable
     ...
 }
 ```
+
+---
+
+class: center, middle
+
+# Composition vs. Inheritance
 
 ---
 

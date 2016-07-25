@@ -174,7 +174,7 @@ class Monster : Creature
 {
     public float DamageModifier { get; set; }
 
-    public void Attack(Creature creature)
+    public void CreatureAttack(Creature creature)
     {
         Random random = new Random();
         if (random.Next(0, 5) == 0)
@@ -203,7 +203,7 @@ Creature monster = new Monster();
 Creature player = new Player();
 monster.Attack(player);
 ```
-Monster만의 어택이 실행됨!
+Monster만의 어택이 실행되게끔 하고 싶다!
 
 ---
 

@@ -88,6 +88,8 @@ class: center, middle
 - HashSet<T>
 - 기타 등등...
 
+이러한 클래스들은 System.Collections.Generic이라는 네임스페이스에 들어있습니다..
+
 ---
 
 # C#에서 구현되어 놓은 것 말고도...
@@ -192,9 +194,9 @@ List<Vector2i> positions = new List<Vector2i>()
 
 ```csharp
 Dictionary<string, int> phoneBook = new Dictionary<string, int>();
-phoneBook["델몬트"] = 12345678;
-phoneBook["지뇽"] = 14253647;
-phoneBook["지호"] = 15124764;
+phoneBook.Add("델몬트", 12345678);
+phoneBook.Add("지뇽",  14253647);
+phoneBook.Add("지호", 15124764);
 
 Console.WriteLine("델몬트의 전화번호를 알고 싶어!");
 int delmontNumber = phoneBook["델몬트"];
@@ -208,10 +210,23 @@ Console.WriteLine("010" + delmontNumber);
 
 ---
 
+# Dictionary<T, U> 를 생성하는 빠른 방법
+
+```csharp
+Dictionary<string, int> phoneBook = new Dictionary<string, int>()
+{
+    {"델몬트", 12345678},
+    {"지뇽", 14253647},
+    {"지호", 15124764}
+}
+```
+
+---
+
 # Dictionary에 있는 모든 아이템 출력하기
 
 ```csharp
-foreach (var entry in phoneBook)
+foreach (var entry in phoneBook) // entry is type of KeyValuePair<string, int>
 {
     Console.WriteLine(entry.Key + " : " + entry.Value);
 }
@@ -231,14 +246,43 @@ foreach (var entry in phoneBook)
 
 ```csharp
 Console.Write("델몬트의 전화번호를 알고 싶어!");
+if (phoneBook.ContainsKey("델몬트"))
+{
+    Console.Write("010" + phoneBook["델몬트"]);
+}
+else
+{
+    Console.Write("이런! 전화번호부에 없다니...");
+}
+```
+
+---
+
+# 안전하게 Dictionary에서 값 불러오기 (가장 효율적임)
+
+```csharp
+Console.Write("델몬트의 전화번호를 알고 싶어!");
 int delmontNumber;
-if (values.TryGetValue("델몬트", out delmontNumber))
+if (phoneBook.TryGetValue("델몬트", out delmontNumber))
 {
     Console.Write("010" + delmontNumber);
 }
 else
 {
     Console.Write("이런! 전화번호부에 없다니...");
+}
+```
+
+---
+
+# 이외 Dictionary의 유용한 메서드들
+
+```csharp
+phoneBook.Remove("델몬트");
+
+foreach (var name in phoneBook.Keys())
+{
+    Console.WriteLine(name);
 }
 ```
 
@@ -334,7 +378,88 @@ foreach (int num in numbers)
 
 ```csharp
 HashSet<int> hashSet = new HashSet<int>();
-hashSet.
+hashSet.Add(1);
+hashSet.Add(2);
+hashSet.Add(4);
+hashSet.Add(2);
+foreach (int num in hashSet)
+{
+    Console.WriteLine(num);
+}
+```
+```
+1
+2
+4
+```
+
+---
+
+# HashSet<T> from Array/List
+
+```csharp
+int[] array = {1, 2, 3, 2, 1};
+HashSet<int> hashSet = new HashSet<int>(array);
+foreach (int num in hashSet)
+{
+    Console.WriteLine(num);
+}
+```
+
+---
+
+# Generics
+
+List<T> : T 안에 임의의 타입을 넣을 수 있다!
+
+Dictionary<T, U> : T, U 안에 임의의 타입을 넣을 수 있다!
+
+이렇게 Generics가 어떻게 유용하게 쓰이는지를 알았으니...
+
+Generics를 활용한 클래스를 우리가 직접 만들어봅시다!
+
+---
+
+# Grid class
+
+게임 개발을 많이 하다 보면 그리드 형태의 구조가 많이 필요하게 될 것입니다...
+
+물론 2D 어레이를 사용할 수도 있지만 좀 더 기능이 많은 우리만의 Grid<T> 클래스를 만들어 봅시다
+
+---
+
+# Grid<T>
+
+라이브 코딩 시간!
+
+---
+
+# Grid<T>를 사용해보자
+
+```csharp
+static void Main(string[] args)
+{
+    Grid<int> grid = new Grid<int>(5, 5, 1);
+    grid.Set(3, 3, 2);
+    grid.Set(3, 2, 4);
+    grid.SetItemsInRect(0, 0, 2, 2, 5);
+    int i = 1;
+    List<int> nums = grid.ToList();
+    foreach (int num in nums)
+    {
+        Console.Write(num);
+        if (i % grid.Width == 0) Console.WriteLine();
+        i++;
+    }
+    Console.ReadKey();
+}
+```
+```
+55511
+55511
+55511
+11421
+11111
 ```
 
 ---

@@ -99,13 +99,13 @@ class: center, middle
     - Undirected graph
     - Directed graph
 
-이쯤 되면 자료구조 수업의 영역으로 가니까 생략하겠습니다...
+이쯤 되면 자료구조 전공수업의 영역으로 가니까 생략하겠습니다...
 
 ---
 
 # List<T> : 어레이의 업그레이드 버젼
 
-일반 어레이하고 기능은 비슷해 보이나... 오브젝트를 추가하거나 제거할 수 있디!
+일반 어레이하고 기능은 비슷해 보이나... 오브젝트를 추가하거나 제거할 수 있다! (크기 변경 가능)
 
 ```csharp
 List<int> list = new List<int>();
@@ -118,9 +118,211 @@ foreach (int num in list)
     Console.WriteLine(num);
 }
 
-list.Remove
+list.RemoveAt(1);
+
+for (int i = 0; i < list.Count; i++)
+{
+    Console.WriteLine("{0} : {1}", i, list[i]);
+}
 
 ```
+
+---
+
+# 음? <T>는 도데체 뭐죠?
+
+(앞으로 배우게 될) Generics를 의미합니다.
+
+말하자면 꺽쇠 안에 우리가 임의의 타입을 집어넣을 수 있다는 것입니다.
+
+`List<int>, List<string>, List<MyClass>`, 등등..
+
+---
+
+# List의 좋은 점
+
+- 크기 조절 가능
+- 다양한 메서드 사용 가능
+- 크기가 바뀌지 않을 때 어레이하고 속도 차이가 거의 없음
+- 크가기 바뀔 때도 최적화가 꽤 잘 되어 있기 때문에 걱정하지 않아도 됨
+
+---
+
+# 다양한 메서드...
+
+정말 많습니다...
+
+(https://msdn.microsoft.com/en-us/library/6sh2ey19(v=vs.110).aspx)
+
+---
+
+# List<T> 오브젝트 만들기
+
+```csharp
+List<int> list = new List<int>();
+list.Add(1);
+list.Add(2);
+list.Add(3);
+```
+
+```csharp
+List<int> list = new List<int>() { 1, 2, 3 };
+```
+
+---
+
+# List<T> 오브젝트 만들기
+
+```csharp
+List<Vector2i> positions = new List<Vector2i>()
+{
+    new Vector2i(1, 2),
+    new Vector2i(0, -1),
+    new Vector2i(1, 0)
+};
+```
+
+---
+
+# Dictionary<T, U>
+
+이젠 좀 더 복잡한 C# 클래스를 살펴봅시다.
+
+(음... 사실 이름이 모든걸 말하고 있군요)
+
+```csharp
+Dictionary<string, int> phoneBook = new Dictionary<string, int>();
+phoneBook["델몬트"] = 12345678;
+phoneBook["지뇽"] = 14253647;
+phoneBook["지호"] = 15124764;
+
+Console.WriteLine("델몬트의 전화번호를 알고 싶어!");
+int delmontNumber = phoneBook["델몬트"];
+Console.WriteLine("010" + delmontNumber);
+```
+
+```
+델몬트의 전화번호를 알고 싶어!
+01012345678
+```
+
+---
+
+# Dictionary에 있는 모든 아이템 출력하기
+
+```csharp
+foreach (var entry in phoneBook)
+{
+    Console.WriteLine(entry.Key + " : " + entry.Value);
+}
+```
+
+```csharp
+델몬트 : 12345678
+지뇽 : 14253647
+지호 : 15124764
+```
+
+참고: 순서는 보장할 수 없습니다...
+
+---
+
+# 안전하게 Dictionary에서 값 불러오기
+
+```csharp
+Console.Write("델몬트의 전화번호를 알고 싶어!");
+int delmontNumber;
+if (values.TryGetValue("델몬트", out delmontNumber))
+{
+    Console.Write("010" + delmontNumber);
+}
+else
+{
+    Console.Write("이런! 전화번호부에 없다니...");
+}
+```
+
+---
+
+# Queue<T>, Stack<T>
+
+.left[Queue : FIFO (First in, first out)]
+<img src=queue.png width="400" align="left">
+.right[Stack : LIFO (Last in, first out)]
+<img src=stack-lifo.png width="400" align="right">
+
+---
+
+# Queue<T>
+
+말그대로 줄서기를 생각하면 됨.
+
+```csharp
+Queue<int> numbers = new Queue<int>();
+numbers.Enqueue(1);
+numbers.Enqueue(2);
+numbers.Enqueue(3);
+foreach (int num in numbers)
+{
+    Console.WriteLine(num);
+}
+Console.WriteLine("Dequeued number " + numbers.Dequeue());
+foreach (int num in numbers)
+{
+    Console.WriteLine(num);
+}
+```
+
+---
+
+# Queue<T>
+
+예) AI 명령 (예를 들어 The Sims 같은)
+
+```csharp
+Queue<Task> tasks = new Queue<Task>();
+tasks.Enqueue(new CleanRoomTask());
+tasks.Enqueue(new GoToBathroomTask());
+tasks.Enqueue(new SleepTask());
+
+while(tasks.Count == 0)
+{
+    Task taskToDo = tasks.Dequeue();
+    taskToDo.Execute();
+}
+```
+
+---
+
+# Stack<T>
+
+말그대로 쌓여있는 더미를 생각하면 됨.
+
+꽤 친숙한 놈이죠?
+
+```csharp
+Stack<int> numbers = new Stack<int>();
+numbers.Push(1);
+numbers.Push(2);
+numbers.Push(3);
+foreach (int num in numbers)
+{
+    Console.WriteLine(num);
+}
+Console.WriteLine("Popped number: " + numbers.Pop());
+foreach (int num in numbers)
+{
+    Console.WriteLine(num);
+}
+```
+
+---
+
+# Stack<T>
+
+예) AI (http://www.aaroncox.net/tutorials/miscellaneous/Stacks_Queues.html)
+
+이외에도 Stack와 Queue는 알고리즘에서 많이 쓰입니다.
 
 ---
 

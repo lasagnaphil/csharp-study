@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Your Title Here</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!-- This is template for http://remarkjs.com/ by Ole Petter Bang -->
+    <!-- CSS modifcations by J. M. Lilly-->
+
+    <style type="text/css">
+      @import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'NanumGothic';letter-spacing:0.025em;}
+      h1, h2, h3 {
+        font-family: 'NanumGothic';
+        font-weight: normal;
+      }
+      .remark-slide-content h1 { font-size: 2.4em; color:#606060;font-weight: bold;letter-spacing:0.05em;margin-top:0em}
+      .remark-slide-content h2 { font-size: 1.55em;color:#606060;font-weight: bold;letter-spacing:0.05em;margin-top:0em}
+      .remark-slide-content h3 { font-size: 1.4em;color:#606060;font-weight: bold;letter-spacing:0.05em;margin-top:0em}
+      .remark-slide-content p { font-size: 1.4em; }
+      .remark-slide-content ol {font-size: 1.2em;}
+      .remark-slide-content ul {font-size: 1.2em;}
+      .remark-slide-content
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+      /* Two-column layout */
+      .left-column {
+        width: 50%;
+        float: left;
+      }
+      .right-column {
+        width: 49%;
+        float: right;
+        padding-top: 0em;
+        margin-top: 0em;
+        text-align: left;
+      }
+      .footnote {
+        position:absolute;
+        bottom: 1em;
+        left: 14em;
+        font-size: 0.7em;
+       }
+
+      /* Some special classes */
+      .title {font-size: 3.3em; color:#606060;font-weight:bold;letter-spacing:0.05em}
+      .subtitle {font-size: 1.4em}
+      .author {font-size: 1.4em; color:#606060;font-weight:bold;letter-spacing:0.02em}
+      .coauthor {font-size: 1.0em; color:#606060;font-weight:bold;letter-spacing:0.02em}
+      .institution {font-size: 1.0em;}
+      .date {font-size: 1.0em;font-style: italic}
+
+      .cite {font-size: 0.8em; color:#33AA99;font-style: italic}
+      .strike {color:salmon;text-decoration:line-through}
+
+      /*Set color scheme for links.*/
+      a {text-decoration: none; color: #666666;text-align:center; width: 24%}
+      /*Setting link properties is particular, do not change order below*/
+      a:visited {color:#666666}
+      a:hover {color:#33AA99}
+      a:active, a#active {color:#FF9700;}
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Chapter 6 (extra) : Namespaces
+
+---
+
+# Namespaces
+
+타입의 개수가 늘어날수록 관리하기가 힘들어지기 때문에, 타입들을 하나의 그룹으로 묶어놓을 방법이 필요합니다.
+
+그래서 네임스페이스라는 구조물을 사용합니다.
+
+---
+
+Vector.cs
+```csharp
+namespace Math
+{
+    public class Vector2i
+    {
+        ...
+    }
+    public class Vector3i
+    {
+        ...
+    }
+}
+```
+
+Matrix.cs
+```csharp
+namespace Math
+{
+    public class Matrix
+    {
+        ...
+    }
+}
+```
+
+---
+
+# 네임스페이스 사용하기
+
+```csharp
+public class Program
+{
+    static void Main(string[] args)
+    {
+        Math.Matrix matrix = new Math.Matrix(10, 10);
+        Math.Vector2i vec2 = new Math.Vector2i(1, 2);
+    }
+}
+```
+
+---
+# 네임스페이스 사용하기
+
+```csharp
+using Math;
+
+public class Program
+{
+    static void Main(string[] args)
+    {
+        Matrix matrix = new Matrix(10, 10);
+        Vector2i vec2 = new Vector2i(1, 2);
+    }
+}
+```
+
+---
+
+# global namespace
+
+만약에 우리가 만든 아무런 네임스페이스에도 포함시키니 않는다면....
+
+global namespace (`global::`)에 추가됩니다
+
+모든 클래스가 global에 있으면 관리하기가 힘들어질 수 있으므로, 프로젝트가 커지면 가급적이면 namespace에 넣어놓읍시다..
+
+---
+
+# 타입 충돌
+
+하나의 네임스페이스에는 하나의 타입 이름만 정의될 수 있습니다.
+
+즉 같은 이름의 타입을 두 번 정의하는 것은 불가능한거죠.
+
+---
+
+# 타입 충돌
+
+예시 (책에 있음)
+
+```csharp
+using N1;
+using N2;
+
+namespace N1
+{
+    public class C {}
+}
+
+namespace N2
+{
+    public class C {}
+}
+
+namespace NamespaceExample
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            C c = new C(); // N1.C일까? N2.C일까?
+        }
+    }
+}
+```
+
+---
+
+# 타입 충돌 해결하기 (type alias)
+
+```csharp
+using CFromN1 = N1.C;
+
+using N1;
+using N2;
+
+namespace N1
+{
+    public class C {}
+}
+
+namespace N2
+{
+    public class C {}
+}
+
+namespace NamespaceExample
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            CFromN1 c = new CFromN1(); // N1 네임스페이스의 C가 사용됨
+        }
+    }
+}
+```
+
+---
+
+# using static
+
+static한 클래스만 따로 가져올 수 있는 C# 6의 새로운 기능입니다.
+
+쓰게 되면 해당 네임스페이스에 있는 함수들을 클래스 이름 없이 쓸 수 있게 됩니다.
+
+```csharp
+using static System.Math;
+using static System.Console;
+
+namespace StaticUsingDirectives
+{
+    public static void Main(string[] args)
+    {
+        double x = PI;
+        WriteLine(Sin(x));
+        ReadKey();
+    }
+}
+```
+
+참고로 유니티에서는 구닥다리 C# 버젼을 사용하고 있어서 쓸 수 없습니다.
+
+---
+
+# 자주 쓰는 namespace들
+
+System : 시스템 기본 라이브러리 (Console 관련된것 포함)
+
+System.Math : 수학 라이브러리
+
+System.Collections.Generic : `List<T>`, `Dictionary<T>` 등의 Generic 자료구조가 있는 곳
+
+System.Linq : 함수형 언어쪽 라이브러리. 나중에 배우게 될 것.
+
+---
+
+# 그럼 끝.
+## 모두 수고하셨습니다!
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+          ratio: '16:10'
+          });
+    </script>
+    <script src="https://cdn.rawgit.com/William-Yeh/remark-zoom/master/remark-zoom.js" type="text/javascript"></script>
+  </body>
+</html>

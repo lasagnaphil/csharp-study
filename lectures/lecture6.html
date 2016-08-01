@@ -186,7 +186,7 @@ List<Vector2i> positions = new List<Vector2i>()
 
 ---
 
-# Dictionary<T, U>
+# Dictionary<K, V>
 
 이젠 좀 더 복잡한 C# 클래스를 살펴봅시다.
 
@@ -210,7 +210,7 @@ Console.WriteLine("010" + delmontNumber);
 
 ---
 
-# Dictionary<T, U> 를 생성하는 빠른 방법
+# Dictionary<K, V> 를 생성하는 빠른 방법
 
 ```csharp
 Dictionary<string, int> phoneBook = new Dictionary<string, int>()
@@ -410,9 +410,9 @@ foreach (int num in hashSet)
 
 # Generics
 
-List<T> : T 안에 임의의 타입을 넣을 수 있다!
+`List<T>` : T 안에 임의의 타입을 넣을 수 있다!
 
-Dictionary<T, U> : T, U 안에 임의의 타입을 넣을 수 있다!
+`Dictionary<T, U>` : T, U 안에 임의의 타입을 넣을 수 있다!
 
 이렇게 Generics가 어떻게 유용하게 쓰이는지를 알았으니...
 
@@ -460,6 +460,53 @@ static void Main(string[] args)
 55511
 11421
 11111
+```
+
+---
+
+# Type constraint for generics
+
+Generics에 사용되는 임의의 타입 (T) 에 제한 조건 (constraint)를 추가할 수 있습니다
+
+```csharp
+public class MyList<T> where T : IComparable
+{
+    ...
+}
+```
+
+---
+
+# Type constraint for generics
+
+```csharp
+public class MyDictionary<K, V> where K : IComparable, IEquatable
+                                where V : IEquatable
+{
+
+}
+```
+
+---
+
+# Type constraint for generics
+
+```csharp
+public class PracticeList<T> where T : new() {...}
+public class PracticeList<T> where T : class {...}
+public class PracticeList<T> where T : struct {...}
+public class GenericClass<T, U> where T : U {...}
+```
+
+---
+
+# Generic Methods
+
+```csharp
+public T LoadObject<T>(string fileName) {...}
+```
+```csharp
+Person person = LoadObject<Person>("person1.txt")
 ```
 
 ---

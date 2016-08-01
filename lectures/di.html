@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Your Title Here</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!-- This is template for http://remarkjs.com/ by Ole Petter Bang -->
+    <!-- CSS modifcations by J. M. Lilly-->
+
+    <style type="text/css">
+      @import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'NanumGothic';letter-spacing:0.025em;}
+      h1, h2, h3 {
+        font-family: 'NanumGothic';
+        font-weight: normal;
+      }
+      .remark-slide-content h1 { font-size: 2.4em; color:#606060;font-weight: bold;letter-spacing:0.05em;margin-top:0em}
+      .remark-slide-content h2 { font-size: 1.55em;color:#606060;font-weight: bold;letter-spacing:0.05em;margin-top:0em}
+      .remark-slide-content h3 { font-size: 1.4em;color:#606060;font-weight: bold;letter-spacing:0.05em;margin-top:0em}
+      .remark-slide-content p { font-size: 1.4em; }
+      .remark-slide-content ol {font-size: 1.2em;}
+      .remark-slide-content ul {font-size: 1.2em;}
+      .remark-slide-content
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+      /* Two-column layout */
+      .left-column {
+        width: 50%;
+        float: left;
+      }
+      .right-column {
+        width: 49%;
+        float: right;
+        padding-top: 0em;
+        margin-top: 0em;
+        text-align: left;
+      }
+      .footnote {
+        position:absolute;
+        bottom: 1em;
+        left: 14em;
+        font-size: 0.7em;
+       }
+
+      /* Some special classes */
+      .title {font-size: 3.3em; color:#606060;font-weight:bold;letter-spacing:0.05em}
+      .subtitle {font-size: 1.4em}
+      .author {font-size: 1.4em; color:#606060;font-weight:bold;letter-spacing:0.02em}
+      .coauthor {font-size: 1.0em; color:#606060;font-weight:bold;letter-spacing:0.02em}
+      .institution {font-size: 1.0em;}
+      .date {font-size: 1.0em;font-style: italic}
+
+      .cite {font-size: 0.8em; color:#33AA99;font-style: italic}
+      .strike {color:salmon;text-decoration:line-through}
+
+      /*Set color scheme for links.*/
+      a {text-decoration: none; color: #666666;text-align:center; width: 24%}
+      /*Setting link properties is particular, do not change order below*/
+      a:visited {color:#666666}
+      a:hover {color:#33AA99}
+      a:active, a#active {color:#FF9700;}
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+# Dependency resolution in C# and Unity
+
+---
+
+# Dependency Injection? WTF?
+
+용어는 어려워보이지만 별로 대단한 건 없습니다.
+
+"Dependency injection means giving an object its instance variables. Really. That's it." - James Shore
+
+번역하자면... 오브젝트에 인스턴스 변수들을 집어넣는 행위.
+
+말하자면 전부터 계속 해오던 평범한 짓이였던 것.
+
+---
+
+# Dependency Non-Injection
+
+```csharp
+public class Player
+{
+    private GameWorld myGameWorld;
+
+    public Player()
+    {
+        myGameWorld = new GameWorld();
+    }
+
+    public void DoStuff()
+    {
+        ...
+        myGameWorld.GetData();
+        ...
+    }
+}
+```
+
+---
+
+# Dependency Injection
+
+```csharp
+public class Player
+{
+    private GameWorld myGameWorld;
+
+    public Player(GameWorld useThisGameWorldInstead)
+    {
+        myGameWorld = useThisGameWorldInstead;
+    }
+
+    public void DoStuff()
+    {
+        ...
+        myGameWorld.GetData();
+        ...
+    }
+}
+```
+
+---
+
+# C#에서의 Dependency 관리
+
+1. Constructor
+2. Setter
+3. Method Parameter
+4. Singleton
+
+이 방법들을 하나하나 봅시다. (사실 이미 써오고 있던 것들일거에요!)
+
+---
+
+# Constructor
+
+```csharp
+public class Player
+{
+    private GameWorld myGameWorld;
+
+    public Player(GameWorld gameWorld)
+    {
+        myGameWorld = gameWorld;
+    }
+
+    public void DoStuff()
+    {
+        ...
+        var data = myGameWorld.GetData();
+        ...
+    }
+}
+```
+
+장점:
+- 오브젝트들 사이의 의존하는 구조가 바뀌지 않게 할 수 있다. (오브젝트를 처음 생성하고 나서는 Dependency를 바꿀 수 없다)
+
+단점:
+- 그만큼 의존하게 되는 것들이 바꾸기 어렵게 된다.
+
+---
+
+# Setter
+
+```csharp
+public class Player
+{
+    private GameWorld myGameWorld;
+
+    public SetGameWorld(GameWorld useThisDatabse)
+    {
+        myGameWorld = useThisGameWorld;
+    }
+
+    public void DoStuff()
+    {
+        ...
+        var data = myGameWorld.GetData();
+        ...
+    }
+}
+```
+
+장점:
+- Setter는 언제나 호출할 수 있기 때문에 실행 도중에 의존 구조를 변경할 수 있다.
+
+단점:
+- 그만큼 의존 구조가 유동적으로 변하므로 조심해야 할 부분들이 많아진다.
+
+---
+
+# Method Parameter
+
+우리가 원하는 인스턴스의 레퍼런스를 필요할 때만 가져오자.
+
+참고: 엄밀히 말하자면 가져온 instance를 저장하는 것이 아니므로 DI에 해당된다고 보기는 어렵지만, 비슷한 패턴이여서 넣어보았다.
+
+```csharp
+public class Player
+{
+    public void DoStuff(GameWorld gameWorld)
+    {
+        ...
+        var data = gameWorld.GetData();
+        ...
+    }
+}
+```
+
+장점:
+- 해당 레퍼런스를 항상 가지고 있지 않아도 되고 필요할 때만 가져오기 때문에 Dependency를 좀 더 세부적으로 제어할 수 있다.
+
+단점:
+- 호출하는 함수마다 패러미터로 오브젝트를 집어넣어야 하는 번거로움이 있다.
+
+---
+
+# Singleton
+
+static이고, 전 프로그램에 대해 단 하나로만 존재하는 GameWorld를 만듭시다.
+
+```csharp
+public class Player
+{
+    public void DoStuff(GameWorld gameWorld)
+    {
+        ...
+        var data = GameWorld.Instance.GetData();
+        ...
+    }
+}
+```
+
+---
+
+# Singleton 구현
+
+```csharp
+public class GameWorld
+{
+    private static GameWorld instance = null;
+    private GameWorld()
+    {
+    }
+
+    public static GameWorld Instance
+    {
+        get
+        {             
+            if (instance == null)
+            {
+                instance = new GameWorld();
+            }
+            return instance;
+        }
+    }
+
+    // all the other members / methods here
+    ...
+}
+```
+
+---
+
+# 장점 / 단점
+
+장점:
+- 경우에 따라 정말로 편함. (아무 곳에서나 레퍼런스를 제약 없이 받을 수 있음)
+
+단점:
+- 코드끼리의 의존성 매우 증가.
+- 코드 테스트가 매우 어려워짐.
+- 전 프로그램에 걸쳐 항상 존재하고, 하나밖에 존재할 수 없다는 제약이 있음.
+
+가급적이면 사람들이 쓰지 말라고 하는 추세입니다.
+
+...하지만 하드코딩이 어느정도 필요한 게임 개발의 세계에서는 자주 쓰이게 됩니다.
+
+저는 (지금까지의 경험으로는) 가급적이면 피하는 것이 좋다고 생각합니다...
+
+---
+
+# Unity에서의 Dependency 관리
+
+유니티에서는 GameObject, Component의 개념이 추가되면서 Dependency 관리를 하는 방법도 조금 달라집니다...
+
+유니티의 C#은 그냥 C#과는 다르다!
+
+---
+
+# 아쉽게도 쓸 수 없는 Constructor
+
+우리가 GameObject를 생성시키고 싶을 때, `new`를 통해 Constructor를 썼을까요? 아닙니다.
+
+Instantiate()라는 유니티 함수를 썼죠.
+
+즉, Instantiate()를 부르게 되면, 유니티가 (우리는 알 수 없는 곳에) 오브젝트 하나를 생성시켜 줄 것이고, 그것에 대한 레퍼런스를 우리에게 가져다줍니다.
+
+하지만 Instantiate()에 Constructor처럼 추가 정보를 넘길 수 있는 방법이 없으므로... 1번은 우리의 작업도구에서 빠지게 됩니다.
+
+---
+
+# Setter 방법으로 만회...
+
+```csharp
+public class GameWorld : Monobehaviour
+{
+    void Start()
+    {
+        GameObject playerGM = Instantiate(playerPrefab);
+        Player player = playerGM.GetComponent<Player>();
+        player.GameWorld = this;
+    }
+}
+```
+
+하지만 문제는 이렇게 변수들을 세팅하는 과정을 까먹게 될 가능성이 많게 됩니다.
+
+이쯤 되면 Constructor가 왜 이렇게 중요한지 깨달게 될 것입니다...
+
+---
+
+# Unity에서 추가적으로 쓸 수 있는 Dependency 관리
+
+5. Serialized dependencies
+6. Manual find
+
+---
+
+# Serialized dependencies
+
+유니티 튜토리얼을 공부할때, 변수를 public으로 만들고 inspector에서 끌어서 가져올 수 있었죠? 이것이 바로 dependency 관리 중 하나의 방법입니다.
+
+---
+
+# 문제점
+
+Unity의 Serialization은 상당히 더러운 부분이 많다.
+
+사소한 이유로 이렇게 끌어서 가져온 레퍼런스들이 끊기는 일이 종종 있다.
+(예를 들어 변수 이름을 바꾼다던지, 클래스에 조금 큰 수정을 한다던지)
+
+그리고 프리팹을 사용할 때 문제가 생기게 된다.
+
+---
+
+# 마지막 방법 (최후의 희망): Manual find
+
+수동으로
+---
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+          ratio: '16:10'
+          });
+    </script>
+    <script src="https://cdn.rawgit.com/William-Yeh/remark-zoom/master/remark-zoom.js" type="text/javascript"></script>
+  </body>
+</html>

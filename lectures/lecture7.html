@@ -312,7 +312,7 @@ IEnumerable<int> numQuery2 = numbers.Where(num => num % 2 == 0).OrderBy(n => n);
 고전적인 방법
 ```csharp
 List<int> list = new List<int>();
-for (int i = 1; i <= 100; i += 2)
+for (int i = 2; i <= 100; i += 2)
 {
     list.Add(i);
 }
@@ -333,7 +333,7 @@ for (int i = 1; i <= 100; i++)
 일단 1 ~ 100까지의 숫자를 만듭니다
 
 ```csharp
-IEnumerator<int> rangeOfNums = Enuerable.Range(1, 100);
+IEnumerable<int> rangeOfNums = Enumerable.Range(1, 100);
 ```
 
 ---
@@ -343,21 +343,21 @@ IEnumerator<int> rangeOfNums = Enuerable.Range(1, 100);
 이렇게 얻은 숫자들의 묶음중에서 짝수만 빼옵니다.
 
 ```csharp
-IEnumerator<int> rangeOfNums = Enuerable.Range(1, 100);
-IEnumerator<int> evenNums = rangeOfNums.Where(i => i % 2 == 0);
+IEnumerable<int> rangeOfNums = Enuerable.Range(1, 100);
+IEnumerable<int> evenNums = rangeOfNums.Where(i => i % 2 == 0);
 ```
 
-원래 오브젝트 타입: `IEnumerator<A>`
+원래 오브젝트 타입: `IEnumerable<A>`
 인풋: `Predicate<A> ( = Func<A, bool>)`
-아웃풋: `IEnumerator<A>`
+아웃풋: `IEnumerable<A>`
 
 ---
 
-# IEnumerator<T>에서 다시 List<T>로 변환하기
+# IEnumerable<T>에서 다시 List<T>로 변환하기
 
 ```csharp
-IEnumerator<int> rangeOfNums = Enuerable.Range(1, 100);
-IEnumerator<int> evenNums = rangeOfNums.Where(i => i % 2 == 0);
+IEnumerable<int> rangeOfNums = Enuerable.Range(1, 100);
+IEnumerable<int> evenNums = rangeOfNums.Where(i => i % 2 == 0);
 List<int> list = evenNums.ToList();
 ```
 
@@ -397,9 +397,11 @@ Enumerable.Range(1, 100)
           .ForEach(Console.WriteLine);
 ```
 
+---
+
 # Select
 
-IEnumerable<T> -> IEnumerable<U> 로 변환하고 싶을 때 사용
+`IEnumerable<T> -> IEnumerable<U>` 로 변환하고 싶을 때 사용
 
 A의 오브젝트들을 B의 오브젝트로 일대일 매핑(mapping)하는 함수.
 
@@ -407,9 +409,9 @@ A의 오브젝트들을 B의 오브젝트로 일대일 매핑(mapping)하는 함
 
 # Select의 타입
 
-원래 오브젝트 타입: `IEnumerator<TSource>`
+원래 오브젝트 타입: `IEnumerable<TSource>`
 인풋: `Func<TSource, TResult> selector`
-아웃픗: `IEnumerator<TResult>`
+아웃픗: `IEnumerable<TResult>`
 
 ```csharp
 var list = Enumerable.Range(1, 50).Select(i => i*2).ToList();

@@ -16,6 +16,27 @@ namespace CellphoneProblem
             this.x = x;
             this.y = y;
         }
+        public override bool Equals(object obj)
+        {
+            if (obj.GetType() != this.GetType()) return false;
+
+            Vector2i other = (Vector2i)obj;
+            return (this.x == other.x) && (this.y == other.y);
+        }
+
+        public override int GetHashCode()
+        {
+            int result = 17;
+            result += 31*result + x;
+            result += 31*result + y;
+            return result;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0}, {1}", x, y);
+        }
+
         public static Vector2i operator +(Vector2i a, Vector2i b)
         {
             return new Vector2i(a.x + b.x, a.y + b.y);
@@ -36,9 +57,14 @@ namespace CellphoneProblem
             return new Vector2i(k*a.x, k*a.y);
         }
 
-        public override string ToString()
+        public static bool operator ==(Vector2i a, Vector2i b)
         {
-            return string.Format("({0}, {1})", x, y);
+            return a.x == b.x && a.y == b.y;
+        }
+
+        public static bool operator !=(Vector2i a, Vector2i b)
+        {
+            return !(a == b);
         }
     }
 
@@ -79,6 +105,22 @@ namespace CellphoneProblem
             Console.WriteLine(a - b);
             Console.WriteLine(a * 2);
             Console.WriteLine(3 * b);
+
+            Console.WriteLine(new Vector2i(1, 2) == new Vector2i(1, 2));
+            Console.WriteLine(new Vector2i(1, 2) != new Vector2i(3, 4));
+
+            int? mysteryNum = null;
+
+            int actualNum;
+            if (mysteryNum.HasValue)
+                actualNum = mysteryNum.Value;
+            else
+                Console.WriteLine("Mystery num is undefined!");
+
+            actualNum = mysteryNum ?? 0;
+            Console.WriteLine(actualNum);
+            actualNum = mysteryNum.GetValueOrDefault();
+            Console.WriteLine(actualNum);
 
             Console.ReadKey();
         }

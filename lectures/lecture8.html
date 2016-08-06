@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Your Title Here</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!-- This is template for http://remarkjs.com/ by Ole Petter Bang -->
+    <!-- CSS modifcations by J. M. Lilly-->
+
+    <style type="text/css">
+      @import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'NanumGothic';letter-spacing:0.025em;}
+      h1, h2, h3 {
+        font-family: 'NanumGothic';
+        font-weight: normal;
+      }
+      .remark-slide-content h1 { font-size: 2.4em; color:#606060;font-weight: bold;letter-spacing:0.05em;margin-top:0em}
+      .remark-slide-content h2 { font-size: 1.55em;color:#606060;font-weight: bold;letter-spacing:0.05em;margin-top:0em}
+      .remark-slide-content h3 { font-size: 1.4em;color:#606060;font-weight: bold;letter-spacing:0.05em;margin-top:0em}
+      .remark-slide-content p { font-size: 1.4em; }
+      .remark-slide-content ol {font-size: 1.2em;}
+      .remark-slide-content ul {font-size: 1.2em;}
+      .remark-slide-content
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+      /* Two-column layout */
+      .left-column {
+        width: 50%;
+        float: left;
+      }
+      .right-column {
+        width: 49%;
+        float: right;
+        padding-top: 0em;
+        margin-top: 0em;
+        text-align: left;
+      }
+      .footnote {
+        position:absolute;
+        bottom: 1em;
+        left: 14em;
+        font-size: 0.7em;
+       }
+
+      /* Some special classes */
+      .title {font-size: 3.3em; color:#606060;font-weight:bold;letter-spacing:0.05em}
+      .subtitle {font-size: 1.4em}
+      .author {font-size: 1.4em; color:#606060;font-weight:bold;letter-spacing:0.02em}
+      .coauthor {font-size: 1.0em; color:#606060;font-weight:bold;letter-spacing:0.02em}
+      .institution {font-size: 1.0em;}
+      .date {font-size: 1.0em;font-style: italic}
+
+      .cite {font-size: 0.8em; color:#33AA99;font-style: italic}
+      .strike {color:salmon;text-decoration:line-through}
+
+      /*Set color scheme for links.*/
+      a {text-decoration: none; color: #666666;text-align:center; width: 24%}
+      /*Setting link properties is particular, do not change order below*/
+      a:visited {color:#666666}
+      a:hover {color:#33AA99}
+      a:active, a#active {color:#FF9700;}
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Chapter 8. 기타 등등의 얘기 / Unity 시작
+
+---
+
+# 사실 중요한 건 거의 다 했습니다...
+
+
+
+---
+
+# string vs StringBuilder
+
+string에 무언가를 덧붙이면 기존의 string이 업데이트되는게 아니라 새로운 string이 만들어지기 때문에,
+
+string에 여러 string/char 를 계속 붙여나가면 꽤 비효율적일 것입니다..
+
+그래서 이런 상황일때는 StringBuilder라는 오브젝트를 씁시다.
+
+```csharp
+StringBuilder sb = new StringBuilder("Hello World!");
+sb.Append(" I");
+sb.Append(" like");
+sb.Append(" pizza!")
+Console.WriteLine(sb);
+```
+
+---
+
+# Nullable type
+
+전에 Reference 타입만 null을 가지고 있을 수 있다는 것을 배웠습니다.
+
+즉, 다음과 같이 Value 타입에 null을 지정할 수는 없습니다.
+
+```csharp
+int mysteryNum = null // WRONG!
+```
+
+하지만 가끔식 Value 타입에 null을 놓고 싶은 마음도 생길거에요... 그럴때는 타입 뒤에 물음표를 붙여서 Nullable type로 만듭시다.
+
+```csharp
+int? mysteryNum = null;
+```
+
+---
+
+# Nullable Type의 사용 예
+
+- 외부 파일에서 숫자 값을 불러오고 싶은데 값이 존재하는지 없는지를 모를 때
+- 변환을 수행할때 (예를 들어서 string을 int로 변환할때 실패할 수도 있으므로)
+- 이외 다양한 함수에서 Nullable Type을 리턴하게 하면 삶이 편해질 수 있다...
+
+---
+
+# Nullable Type 사용하기
+
+```csharp
+int actualNum;
+if (mysteryNum.HasValue)
+    actualNum = mysteryNum.Value;
+else
+    Console.WriteLine("Mystery num is undefined!");
+```
+
+---
+
+# null-coalescing operator (??)
+
+```csharp
+int actualNum = mysteryNum ?? 0;
+```
+
+만약에 mysteryNum안에 값이 있으면 그 값을 actualNum에 넣고,
+
+null이면 디폴트 값으로 0을 집어넣는다
+
+---
+
+# object
+
+C#의 가장 기본적인 타입.
+**모든** 오브젝트는 이 타입을 상속받고 있다. (Reference, Value 타입 불문하고)
+
+---
+
+# 오버라이딩 할수 있는 함수들
+
+다음과 같은 세 함수들을 필요에 따라 재정의할 수 있습니다.
+
+```csharp
+public override bool Equals(object obj) {...}
+public override int GetHashCode() {...}
+public override string ToString() {...}
+```
+
+`bool Equals(object obj)` : 두 오브젝트가 같은지를 비교. 재정의하지 않으면 그냥 같은 레퍼런스인지를 비교하게 된다.
+
+`int GetHashCode()` : 해시코드를 반환하는 함수. 해시코드는 그 오브젝트에 해당되는 특별한 숫자같은 것이고, Dictionary 등의 클래스에서 사용하게 되는 함수이다. 즉, 어느 class/struct를 Dictionary의 Key 값으로 사용한다면, 이 함수를 재정의하는 것이 좋다.
+
+`string ToString()` : 스트링으로 변환하는 함수. 이 함수를 통해 Console.Write에서등 알아서 string으로 바꿔주기 때문에, 재정의해 놓으면 편해다
+
+---
+
+# 벡터 클래스에 기능 추가하기
+
+```csharp
+struct Vector2i
+{
+    public int x, y;
+
+    public Vector2i(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (obj.GetType() != this.GetType()) return false;
+
+        Vector2i other = (Vector2i) obj;
+        return (this.x == other.x) && (this.y == other.y);
+    }
+
+    public override string ToString()
+    {
+        return string.Format("{0}, {1}", x, y);
+    }
+}
+```
+
+# Operator overloading
+
+이걸로는 벡터라고 하기엔 허전하죠... 한번 더하기/빼기/곱하기를 할 수 있는 기능도 만들어 봅시다
+
+예시:
+
+```csharp
+Vector2i a = new Vector2i(1, 2);
+Vector2i b = new Vector2i(3, 4);
+
+Console.WriteLine(a + b);
+Console.WriteLine(a - b);
+Console.WriteLine(a * 2);
+Console.WriteLine(3 * b);
+```
+
+---
+
+# Operator overloading
+
+```csharp
+struct Vector2i
+{
+    ...
+
+    public static Vector2i operator +(Vector2i a, Vector2i b)
+    {
+        return new Vector2i(a.x + b.x, a.y + b.y);
+    }
+
+    public static Vector2i operator -(Vector2i a, Vector2i b)
+    {
+        return new Vector2i(a.x - b.x, a.y - b.y);
+    }
+
+    public static Vector2i operator *(Vector2i a, int k)
+    {
+        return new Vector2i(k*a.x, k*a.y);
+    }
+
+    public static Vector2i operator *(int k, Vector2i a)
+    {
+        return new Vector2i(k*a.x, k*a.y);
+    }
+}
+```
+
+---
+
+# 그럼 끝.
+## 모두 수고하셨습니다!
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+          ratio: '16:10'
+          });
+    </script>
+    <script src="https://cdn.rawgit.com/William-Yeh/remark-zoom/master/remark-zoom.js" type="text/javascript"></script>
+  </body>
+</html>
